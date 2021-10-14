@@ -1,12 +1,61 @@
 ---
-title: "Relatório Parcial"
-author: "Guilherme Pereira de Freitas"
-date: "14/10/2021"
-output: pdf_document
+title: "Aplicação de métodos de aprendizado de máquina não-supervisionado em dados de metilação de DNA de pacientes de COVID-19 \\par Relatório Parcial"
+author: 
+- "Orientadora:  Profa. Samara Kiihl"
+- "Aluno: Guilherme Pereira de Freitas"
+output: 
+  bookdown::pdf_document2:
+    toc: no
+fontsize: 12pt
+geometry: margin=1.25in
+bibliography: referencias.bib
+link-citations: yes
+abstract: "Nada por enquanto"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
-# Introdução
+# Genética
+
+Até o início do século XIX, desconfiava-se de que as características de um ser vivo eram transmitidas a descendentes através da mistura das informações de cada pai. Essa linha de pensamento ganhou força e evidência científica em meados do mesmo século, através dos estudos do biólogo Gregor Johann Mendel (1822 - 1884), considerado o pai da genética, onde o mesmo conduziu vários experimentos em ervilhas. Por meio de análises quantitativas e qualitativas em dados coletados durante uma década, ele foi capaz de mostrar que as características genéticas eram transmitidas dos pais para os filhos de maneira previsível, além de concluir que cada característica presente em uma ervilha é controlada por um par de genes.
+
+Mendel realizou seus experimentos sem conhecer de fato a estrutura dos cromossomos. Tal conhecimento veio a tona após 20 anos da publicação de seu trabalho, onde cientistas identificaram, utilizando-se de microscópios mais avançados, os cromossomos e a quantidade dos mesmos presentes nas espécies eucariontes (diploide).
+
+Desde então, cientistas descobriram os processos de mitose, meiose, formação de gametas, relação entre Genes e Cromossomos e vários outros avanços. [@klug-2019]
+
+## A estrutura do DNA
+
+
+# Epigenética
+
+Existem múltiplos processos de silenciamento de genes, como metilação, acetilação e fosforilação.
+
+## Metilação
+
+Como indicado anteriormente, o método abordado no presente relatório será o de metilação.
+
+
+
+# O chip da Illumina
+
+
+
+# Pré-processamento
+
+Os dados coletados no chip....
+
+O pacote Bioconductor oferece diversas ferramentas de pré-processamento 
+
+## Métodos iterativos
+
+## Métodos Estatísticos
+
+
+
+# Métodos de Aprendizado de Máquina não Supervisionado
+
+
+
+
