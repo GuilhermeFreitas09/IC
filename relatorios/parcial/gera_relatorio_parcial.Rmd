@@ -26,26 +26,25 @@ Os primeiros conceitos de genética surgiram em meados do século XIX, através 
 
 No entanto, a palavra "genética" foi introduzida somente em 1906, numa carta redigida pelo biólogo britânico Willian Bateson (1861-1926), com o objetivo de designar uma nova ciência de variação e hereditariedade. Baseada nos métodos probabilísticos de Mendel, essa nova era ciência era distinguida pelo seu propósito explícito de generalizar a heredirariedade. Em 1910, a genética Mendeliana fundiu-se com a Teoria Cromossômica de Herança, dando início à conhecida Genética Clássica, que se dissolveria algumas décadas depois com a descoberta do DNA como base da herança genética. Esse último evento abriu as portas para a famosa Biologia Molecular, ciência moderna que utilizamos nos dias de hoje. [@Gayon-2016]
 
-## Biologia Molecular
+## Introdução à Biologia Molecular e Mecanismos Genéticos
 
-### O DNA
-
-### O RNA
-
-### Os Genes
-
-### As Células
+### Células
 
 Uma célula é formada por um conjunto de organelas que desempenham funções vitais para o seu funcioamento. Na imagem a seguir, é possível ver a estrutura celular de organismos eucariontes e procariontes, respectivamente. [@reece-2020]
 
-
-```{r estruturaCelular, echo=FALSE, fig.cap="Uma legenda", fig.pos="h", out.width = '100%'}
+```{r estruturaCelular, echo=FALSE, fig.cap="A figura à esquerda é uma célula animal (eucarionte). A figura à direita representa uma célula eucarionte", fig.pos="h", out.width = '100%'}
 knitr::include_graphics("../../imagens/estrutura_celular.png")
 ```
 
-As células eucariontes forma
 
-### Sequenciamento do DNA
+
+### DNA
+
+### RNA
+
+### Cromossomos
+
+## Sequenciamento do DNA
 
 
 
