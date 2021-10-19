@@ -1,5 +1,6 @@
 ---
 title: "Aplicação de métodos de aprendizado de máquina não-supervisionado em dados de metilação de DNA de pacientes de COVID-19 \\par Relatório Parcial"
+lang: "pt-br"
 author: 
 - "Orientadora:  Profa. Samara Kiihl"
 - "Aluno: Guilherme Pereira de Freitas"
@@ -17,17 +18,19 @@ abstract: "Nada por enquanto"
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+# Introdução
+
 # Genética
 
-No início do século XIX, já desconfiava-se de que as características de um ser vivo eram transmitidas a descendentes através da mistura das informações de cada pai. Essa linha de pensamento ganhou força e evidência científica em meados do mesmo século, através dos estudos do biólogo Gregor Johann Mendel (1822 - 1884), considerado o pai da genética, onde o mesmo conduziu vários experimentos em ervilhas. Por meio de análises quantitativas e qualitativas em dados coletados durante uma década, ele foi capaz de mostrar que as características genéticas eram transmitidas dos pais para os filhos de maneira previsível, além de concluir que cada característica presente em uma ervilha é controlada por um par de genes.
+Os primeiros conceitos de genética surgiram em meados do século XIX, através dos famosos experimentos em ervilhas conduzidos pelo biólogo Gregor Johann Mendel (1822 - 1884). Por meio de análises qualitativas e quantitativas em dados coletados durante uma década, Mendel foi capaz de mostrar que os indivíduos herdavam as características de seus pais de modo previsível, além de concluir que cada particularidade de uma ervilha é controlada por um par de fatores que segrega-se na formação dos gametas. [@klug-2019]
 
-Mendel realizou seus experimentos sem conhecer de fato a estrutura dos cromossomos. Tal conhecimento veio a tona após 20 anos da publicação de seu trabalho, onde cientistas identificaram, utilizando-se de microscópios mais avançados, os cromossomos e a quantidade dos mesmos presentes nas espécies eucariontes (diploide).
+No entanto, a palavra "genética" foi introduzida somente em 1906, numa carta redigida pelo biólogo britânico Willian Bateson (1861-1926), com o objetivo de designar uma nova ciência de variação e hereditariedade. Baseada nos métodos probabilísticos de Mendel, essa nova era ciência era distinguida pelo seu propósito explícito de generalizar a heredirariedade. Em 1910, a genética Mendeliana fundiu-se com a Teoria Cromossômica de Herança, dando início à conhecida Genética Clássica, que se dissolveria algumas décadas depois com a descoberta do DNA como base da herança genética. Esse último evento abriu as portas para a famosa Biologia Molecular, ciência moderna que utilizamos nos dias de hoje. [@Gayon-2016]
 
-Desde então, cientistas descobriram os processos de mitose, meiose, formação de gametas, relação entre Genes e Cromossomos e vários outros avanços no conhecimento sobre o DNA. [@klug-2019]
+## Biologia Molecular
 
-## O DNA
+### O DNA
 
-
+### O RNA
 
 ### Os Genes
 
@@ -35,7 +38,10 @@ Desde então, cientistas descobriram os processos de mitose, meiose, formação 
 
 Uma célula é formada por um conjunto de organelas que desempenham funções vitais para o seu funcioamento. Na imagem a seguir, é possível ver a estrutura celular de organismos eucariontes e procariontes, respectivamente. [@reece-2020]
 
-![Células Eucariontes e Procariontes.](../../imagens/estrutura_celular.png)
+
+```{r estruturaCelular, echo=FALSE, fig.cap="Uma legenda", fig.pos="h", out.width = '100%'}
+knitr::include_graphics("../../imagens/estrutura_celular.png")
+```
 
 As células eucariontes forma
 
@@ -47,29 +53,61 @@ As células eucariontes forma
 
 Existem múltiplos processos de silenciamento de genes, como metilação, acetilação e fosforilação.
 
+## Acetilação
+
+## Fosforilação
+
 ## Metilação
 
 Como indicado anteriormente, o método abordado no presente relatório será o de metilação.
 
 
 
-# O chip da Illumina
+# Microarranjos
+
+## O chip da Illumina
 
 
+# Análise Exploratória de Dados de Metilação
 
-# Pré-processamento
+## Pré-processamento
 
 Os dados coletados no chip....
 
 O pacote Bioconductor oferece diversas ferramentas de pré-processamento 
 
-## Métodos iterativos
+### Métodos Iterativos
 
-## Métodos Estatísticos
+### Métodos Estatísticos
 
 
 
 # Métodos de Aprendizado de Máquina não Supervisionado
+
+## Redução de Dimensões
+
+### PCA
+
+### TSNE
+
+### UMAP
+
+## Clustering baseado em distância
+
+### Hierárquico
+
+#### Divisivo 
+
+#### Aglomerativo
+
+## Clustering baseado em densidade
+
+### DBSCAN
+
+### OPTICS
+
+## Clustering baseado em Mistura de Modelos Gaussianos (GMM)
+
 
 
 
