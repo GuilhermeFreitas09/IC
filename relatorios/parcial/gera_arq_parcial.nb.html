@@ -216,8 +216,70 @@ pre code {
 
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuQmlvY01hbmFnZXI6Omluc3RhbGwoXCJJbGx1bWluYUh1bWFuTWV0aHlsYXRpb25FUElDYW5uby5pbG0xMGI0LmhnMTlcIilcbmBgYCJ9 -->
+<pre class="r"><code>BiocManager::install(&quot;IlluminaHumanMethylationEPICanno.ilm10b4.hg19&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<div id="section" class="section level1">
+<h1></h1>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG9hZChcIi4uLy4uL2RhZG9zL3JnU2V0U2FtcGxlLnJkc1wiKVxuYGBgIn0= -->
+<pre class="r"><code>load(&quot;../../dados/rgSetSample.rds&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG9hZChcIi4uLy4uL2RhZG9zL21TZXRTcVwiKVxuYGBgIn0= -->
+<pre class="r"><code>load(&quot;../../dados/mSetSq&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGltKHJnU2V0KVxuYGBgIn0= -->
+<pre class="r"><code>dim(rgSet)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDEwNTE1MzkgICAgICA2MFxuIn0= -->
+<pre><code>[1] 1051539      60</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGltKG1TZXRTcSlcbmBgYCJ9 -->
+<pre class="r"><code>dim(mSetSq)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDg2NTg1OSAgICAgNjBcbiJ9 -->
+<pre><code>[1] 865859     60</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFyKG1mcm93PWMoMiwxKSlcbmRlbnNpdHlQbG90KHJnU2V0LG1haW49XCJEYWRvcyBCcnV0b3NcIiwgbGVnZW5kPUZBTFNFKVxuZGVuc2l0eVBsb3QoZ2V0QmV0YShtU2V0U3EpLG1haW49XCJEYWRvcyBQcsOpLXByb2Nlc3NhZG9zXCIsIGxlZ2VuZD1GQUxTRSlcbmBgYCJ9 -->
+<pre class="r"><code>par(mfrow=c(2,1))
+densityPlot(rgSet,main=&quot;Dados Brutos&quot;, legend=FALSE)
+densityPlot(getBeta(mSetSq),main=&quot;Dados Pré-processados&quot;, legend=FALSE)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFyKG1mcm93PWMoMSwyKSlcbmJveHBsb3QoZ2V0QmV0YShyZ1NldCksbWFpbj1cIkRhZG9zIEJydXRvc1wiLCBsZWdlbmQ9RkFMU0UpXG5ib3hwbG90KGdldEJldGEobVNldFNxKSxtYWluPVwiRGFkb3MgUHLDqS1wcm9jZXNzYWRvc1wiLCBsZWdlbmQ9RkFMU0UpXG5gYGAifQ== -->
+<pre class="r"><code>par(mfrow=c(1,2))
+boxplot(getBeta(rgSet),main=&quot;Dados Brutos&quot;, legend=FALSE)
+boxplot(getBeta(mSetSq),main=&quot;Dados Pré-processados&quot;, legend=FALSE)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+</div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUmVsYXRvcmlvIFBhcmNpYWwiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUmVsYXRvcmlvIFBhcmNpYWwiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCgpgYGB7cn0KQmlvY01hbmFnZXI6Omluc3RhbGwoIklsbHVtaW5hSHVtYW5NZXRoeWxhdGlvbkVQSUNhbm5vLmlsbTEwYjQuaGcxOSIpCmBgYAoKYGBge3IsbWVzc2FnZT1GQUxTRSx3YXJuaW5nPUZBTFNFfQojbGlicmFyeShHRU9xdWVyeSkKbGlicmFyeShtaW5maSkKbGlicmFyeShJbGx1bWluYUh1bWFuTWV0aHlsYXRpb25FUElDbWFuaWZlc3QpCmxpYnJhcnkoSWxsdW1pbmFIdW1hbk1ldGh5bGF0aW9uRVBJQ2Fubm8uaWxtMTBiNC5oZzE5KQpgYGAKCiMgCgpgYGB7cn0KbG9hZCgiLi4vLi4vZGFkb3MvcmdTZXRTYW1wbGUucmRzIikKYGBgCgpgYGB7cn0KbG9hZCgiLi4vLi4vZGFkb3MvbVNldFNxIikKYGBgCgpgYGB7cn0KZGltKHJnU2V0KQpkaW0obVNldFNxKQpgYGAKCmBgYHtyLGZpZy53aWR0aD0xNX0KcGFyKG1mcm93PWMoMiwxKSkKZGVuc2l0eVBsb3QocmdTZXQsbWFpbj0iRGFkb3MgQnJ1dG9zIiwgbGVnZW5kPUZBTFNFKQpkZW5zaXR5UGxvdChnZXRCZXRhKG1TZXRTcSksbWFpbj0iRGFkb3MgUHLDqS1wcm9jZXNzYWRvcyIsIGxlZ2VuZD1GQUxTRSkKYGBgCgpgYGB7ciwgZmlnLndpZHRoPTE1fQpwYXIobWZyb3c9YygxLDIpKQpib3hwbG90KGdldEJldGEocmdTZXQpLG1haW49IkRhZG9zIEJydXRvcyIsIGxlZ2VuZD1GQUxTRSkKYm94cGxvdChnZXRCZXRhKG1TZXRTcSksbWFpbj0iRGFkb3MgUHLDqS1wcm9jZXNzYWRvcyIsIGxlZ2VuZD1GQUxTRSkKYGBgCgo=</div>
 
 
 

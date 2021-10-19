@@ -19,13 +19,28 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Genética
 
-Até o início do século XIX, desconfiava-se de que as características de um ser vivo eram transmitidas a descendentes através da mistura das informações de cada pai. Essa linha de pensamento ganhou força e evidência científica em meados do mesmo século, através dos estudos do biólogo Gregor Johann Mendel (1822 - 1884), considerado o pai da genética, onde o mesmo conduziu vários experimentos em ervilhas. Por meio de análises quantitativas e qualitativas em dados coletados durante uma década, ele foi capaz de mostrar que as características genéticas eram transmitidas dos pais para os filhos de maneira previsível, além de concluir que cada característica presente em uma ervilha é controlada por um par de genes.
+No início do século XIX, já desconfiava-se de que as características de um ser vivo eram transmitidas a descendentes através da mistura das informações de cada pai. Essa linha de pensamento ganhou força e evidência científica em meados do mesmo século, através dos estudos do biólogo Gregor Johann Mendel (1822 - 1884), considerado o pai da genética, onde o mesmo conduziu vários experimentos em ervilhas. Por meio de análises quantitativas e qualitativas em dados coletados durante uma década, ele foi capaz de mostrar que as características genéticas eram transmitidas dos pais para os filhos de maneira previsível, além de concluir que cada característica presente em uma ervilha é controlada por um par de genes.
 
 Mendel realizou seus experimentos sem conhecer de fato a estrutura dos cromossomos. Tal conhecimento veio a tona após 20 anos da publicação de seu trabalho, onde cientistas identificaram, utilizando-se de microscópios mais avançados, os cromossomos e a quantidade dos mesmos presentes nas espécies eucariontes (diploide).
 
-Desde então, cientistas descobriram os processos de mitose, meiose, formação de gametas, relação entre Genes e Cromossomos e vários outros avanços. [@klug-2019]
+Desde então, cientistas descobriram os processos de mitose, meiose, formação de gametas, relação entre Genes e Cromossomos e vários outros avanços no conhecimento sobre o DNA. [@klug-2019]
 
-## A estrutura do DNA
+## O DNA
+
+
+
+### Os Genes
+
+### As Células
+
+Uma célula é formada por um conjunto de organelas que desempenham funções vitais para o seu funcioamento. Na imagem a seguir, é possível ver a estrutura celular de organismos eucariontes e procariontes, respectivamente. [@reece-2020]
+
+![Células Eucariontes e Procariontes.](../../imagens/estrutura_celular.png)
+
+As células eucariontes forma
+
+### Sequenciamento do DNA
+
 
 
 # Epigenética

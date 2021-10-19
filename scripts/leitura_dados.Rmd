@@ -63,12 +63,11 @@ sampleNames(rgSet) <- sapply(sampleNames(rgSet),function(x)
 rownames(pD) <- pD$geo_accession
 pD <- pD[sampleNames(rgSet),]
 pData(rgSet) <- as(pD,"DataFrame")
-save(rgSet,file="../Analises/resultados/rgSet.rds")
+save(rgSet,file="../dados/rgSet.rds")
 ```
 
-
 ```{r,eval=FALSE}
-load("../Analises/resultados/rgSet.rds")
+load("../dados/rgSet.rds")
 dim(rgSet)
 n = dim(rgSet)[2]
 
@@ -80,34 +79,13 @@ samp <- sample(1:n,size=60,replace=FALSE)
 rgSet <- rgSet[,samp]
 phenoData <- pData(rgSet)
 
-save(rgSet,file="../Analises/resultados/rgSetSample.rds")
+save(rgSet,file="../dados/rgSetSample.rds")
 ```
 
 
 ```{r}
-load("rgSetSample.rds")
+load("../dados/rgSetSample.rds")
 densityPlot(rgSet)
-```
-
-```{r}
-dim(rgSet)
-```
-
-```{r}
-mSetSq <- preprocessQuantile(rgSet)
-```
-
-```{r,fig.width=15}
-par(mfrow=c(2,1))
-densityPlot(rgSet,main="Raw", legend=FALSE)
-densityPlot(getBeta(mSetSq),main="Normalized", legend=FALSE)
-```
-
-
-```{r, fig.width=15}
-par(mfrow=c(1,2))
-boxplot(getBeta(rgSet))
-boxplot(getBeta(mSetSq))
 ```
 
 
