@@ -6,7 +6,7 @@ author:
 - "Aluno: Guilherme Pereira de Freitas"
 output: 
   bookdown::pdf_document2:
-    toc: no
+    toc: yes
 fontsize: 12pt
 geometry: margin=1.25in
 bibliography: referencias.bib
@@ -42,7 +42,7 @@ Todas as células possuem características básicas. Elas são elvolvidas pela m
 
 O DNA (Ácido Desoxirribonucleico) é a principal molécula portadora de informações dentro de uma célula, e sua estrutura se dá pela famosa dupla-hélice. Uma molécula de DNA de fita única, também chamada de polinucleotídeo, é uma cadeia de pequenas moléculas denominadas nucleotídeos. É comum utilizar o termo "base nitrogenada" para se referenciar a um nucleotídeo. 
 
-Existem 4 diferentes nucleotídeos, que estão distribuídas em dois grupos; as purinas e as piridiminas. As purinas são as guaninas e adeninas, representadas respectivamente pelas letras G e A. O grupo das piridiminas é formato pelas citosinas e timinas, representadas respectivamente pelas letras C e T. Os polinucleotídeos podem ser formados por qualquer sequência de bases e portanto, podem assumir tamanhos diversos. Além disso, em uma dupla hélice, as duas fitas de polinucleotídeos se ligam através da seguinte forma: C liga com G e A liga com T.
+Existem 4 diferentes nucleotídeos, que estão distribuídas em dois grupos; as purinas e as piridiminas. As purinas são as guaninas e adeninas, representadas respectivamente pelas letras G e A. O grupo das piridiminas é formato pelas citosinas e timinas, representadas respectivamente pelas letras C e T. Os polinucleotídeos podem ser formados por qualquer sequência de bases e podem assumir tamanhos diversos. Além disso, em uma dupla hélice, as duas fitas de polinucleotídeos se ligam através da seguinte forma: C liga com G e A liga com T.
 
 O fim de um polinucleotídeo é marcado por 5' ou 3'. Por convensão, uma fita de DNA é escrita com 5' no polo esquerdo e 3' no polo direito, de tal forma que dois polinucleotídeos são complementares se um pode ser obtido pelo outro através da troca mutual de A por T e C por G.
 [@Brazma-2001]
@@ -53,41 +53,33 @@ Assim como o DNA, uma molécula de RNA (Ácido Ribonucleico) é formada por cade
 
 Existem diferentes moléculas de RNA, que desempenham funções importantes para a síntese de proteínas dentro de uma célula. Esse processo pode ser majoritariamente dividido em duas etapas; transcrição e tradução. De forma resumida, uma enzima, denominada RNA polimerase, inicia o processo de transcrição após reconhecer uma zona de interesse (o início de um gene, por exemplo). Após essa etapa, ela divide temporiariamente a dupla-hélice do DNA em dois polinucleotídeos e transcreve a sequência de um deles em uma molécula de RNA, que será copiada em um RNA mensageiro (mRNA). [@MartinTompa-2003]
 
-Então, o mRNA se liga a um ribosso e encontra o RNA transportador (tRNA), que por sua vez reconhece as informações contidas no mRNA e carrega os aminoácidos apropriados para a construção de proteínas durante a tradução. [@klug-2019]
+Então, o mRNA se liga a um ribossomo e encontra o RNA transportador (tRNA), que por sua vez reconhece as informações contidas no mRNA e carrega os aminoácidos apropriados para a construção de proteínas durante a tradução. [@klug-2019]
 
 ### Cromossomos e genes
 
-A vida depende da capacidade das células de guardar, recuperar e traduzir as instruções genéticas para gerar e manter um organismo vivo [@alberts-2002]. Essas instruções são carregadas por moléculas de DNA, que por sua vez formam as estruturas complexas denonimadas cromossomos. Nos cromossomos, o DNA se apresenta enrolado em proteínas chamadas de histonas, de tal forma que se fosse esticado alcançaria 1m de comprimento. O ser humano possui 23 pares de cromossomos, que formam seu genoma completo. Além disso, dentro de um organismo multicelular, todas as células carregam o mesmo conteúdo genético, com algumas poucas excessões, devido ao resultado da replicação de DNA em cada divisão celular. [@Brazma-2001]
+A vida depende da capacidade das células de guardar, recuperar e traduzir as instruções genéticas para gerar e manter um organismo vivo [@alberts-2002]. Essas instruções são carregadas por moléculas de DNA, que por sua vez formam as estruturas complexas denonimadas cromossomos. Nos cromossomos, o DNA se apresenta enrolado em proteínas chamadas de histonas, de tal forma que se fosse esticado alcançaria 1m de comprimento. Além disso, dentro de um organismo multicelular, todas as células carregam o mesmo conteúdo genético, com algumas poucas excessões, devido ao resultado da replicação de DNA em cada divisão celular. [@Brazma-2001]
 
-Existem várias definições do significado de um "gene". [@Brazma-2001] aponta que um gene é um trecho contínuo de uma molécula de DNA, a partir do qual um complexo maquinário molecular pode ler informações (codificadas com as letras A, T, G e C) e fazer um tipo específico de uma proteína ou um conjunto de proteína. Assim, na síntese protéica, o RNA polimerase identifica a sequência de bases de um gene específico e inicia o processo de produção das proteínas requisitadas.
+Existem várias definições do significado de um "gene". [@Brazma-2001] aponta que um gene é um trecho contínuo de uma molécula de DNA, a partir do qual um complexo maquinário molecular pode ler informações (codificadas com as letras A, T, G e C) e fazer um tipo específico ou um conjunto de proteínas. Os genes são fundamentais em vários processos biomoleculares, como na síntese protéica, onde RNA polimerase identifica a sequência de bases de um gene específico e inicia o processo de produção das proteínas requisitadas.
 
-A diferenciabilidade entre células de um organismo multicelular ocorre através da regulação da expressão gênica, que pode silenciar genes específicos para obter um tipo de célula específica, como as da pele, por exemplo.
+Todos os seres humanos apresentam 23 pares de cromossomos, e a diferenciabilidade entre as suas células, como em qualquer organismo multicelular, ocorre através da regulação da expressão gênica, que pode silenciar determinados genes para obter tipos específicos de células (como a da pele, por exemplo).
 
 ### Sequenciamento
 
 
 
 
-# Epigenética
+# Epigenética e expressão gênica
 
-Existem múltiplos processos de silenciamento de genes, como metilação, acetilação e fosforilação.
+Embora todas as células de um organismo multicelular apresentem o mesmo conteúdo genético, suas funções e particularidades ocorrem a partir do regulamento da expressão gênica. Tal regulamento ocorre por meio de mecanismos epigenéticos, como a metilação do DNA, modificação de histonas e outros processos mediados por RNA, que influenciam principalmente a expressão gênica a nível de transcrição. [@Gibney-2010]
 
-## Acetilação
-
-## Fosforilação
-
-## Metilação
-
-Como indicado anteriormente, o método abordado no presente relatório será o de metilação.
-
+O mecanismo estudado será a metilação da citosina (5mC), que acontece em áreas específicas de regulação, como regiões promotoras ou de heterocromatina. Esse fenômeno pode modificar, significativamente, a expressão temporal e espacial dos genes e a remodelação da cromatina [@Illumina-2017]. Em mamíferos, as citosinas metiladas estão restritas às CpGs, onde elas antecedem uma guanina (G) na direção de 5'. Vale lembrar que o DNA é formado por 4 nucleotídeos e portanto existem 16 possibilidades para se formar um par em sequência, o que ajuda a identificar as ilhas CpGs, pois estas apresentam uma frequência maior desse par quando comparadas com outras regiões arbitrárias. [@Gibney-2010]
 
 
 # Microarranjos
 
-## O chip da Illumina
+Microarranjos de DNA são arranjos de estruturas fixas de ácido nucleico, chamadas de sondas, cujos padrões foram definidos durante a construção ou depositados em um substrato sólido e plano, geralmente de vidro ou silício. Essas plataformas são utilizadas para investigar a quantidade de mRNA, ou genes expressos, presente na amostra biológica sob o experimento (experimento de hibridização). Atualmente, existe uma tendência em usar o sequênciamento de genes com o objetivo de desenvolver sondas e possibilitar a fabricação de microarranjos. [@scherer-2009]
 
-
-# Análise Exploratória de Dados de Metilação
+# Análise de Dados de Metilação
 
 ## Pré-processamento
 
@@ -99,6 +91,7 @@ O pacote Bioconductor oferece diversas ferramentas de pré-processamento
 
 ### Métodos Estatísticos
 
+## Análise de qualidade
 
 
 # Métodos de Aprendizado de Máquina não Supervisionado
@@ -127,7 +120,7 @@ O pacote Bioconductor oferece diversas ferramentas de pré-processamento
 
 ## Clustering baseado em Mistura de Modelos Gaussianos (GMM)
 
-# Referências
+# Referências bibliográficas
 
 
 
