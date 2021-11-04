@@ -4,22 +4,28 @@ lang: "pt-br"
 author: 
 - "Orientadora:  Profa. Samara Kiihl"
 - "Aluno: Guilherme Pereira de Freitas"
+header-includes:
+- \usepackage{float} #use the 'float' package
+- \floatplacement{figure}{H} #make every figure with caption = h
 output: 
   bookdown::pdf_document2:
-    toc: yes
+    toc: no
 fontsize: 12pt
 geometry: margin=1.25in
 bibliography: referencias.bib
 link-citations: yes
-abstract: "Nada por enquanto"
+abstract: "Estudos recentes vêm demonstrando a importância da metilação de DNA, um marcador epigenético importante, na regulação da expressão gênica. Métodos de agrupamento ou de aprendizado de máquina não-supervisionado são utilizados para extrair informações para diagnóstico precoce e tratamentos a partir de dados de alta dimensão dos estudos epigenônicos. Neste projeto, iremos aplicar métodos de agrupamento em dados de metilação de DNA de pacientes de COVID-19. Palavras-chave: bioinformática, metilação de DNA, aprendizado de máquina não supervisionado, métodos de agrupamento, COVID-19, EWAS"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.pos="H")
 ```
 
 # Introdução
 
+Nada por enquanto
+
+\newpage
 # Genética
 
 Os primeiros conceitos de genética surgiram em meados do século XIX, através dos famosos experimentos em ervilhas conduzidos pelo biólogo Gregor Johann Mendel (1822 - 1884). Por meio de análises qualitativas e quantitativas em dados coletados durante uma década, Mendel foi capaz de mostrar que os indivíduos herdavam as características de seus pais de modo previsível, além de concluir que cada particularidade de uma ervilha é controlada por um par de fatores que segrega-se na formação dos gametas. [@klug-2019]
@@ -32,7 +38,7 @@ No entanto, a palavra "genética" foi introduzida somente em 1906, numa carta re
 
 Uma célula é formada por um conjunto de organelas que desempenham funções vitais para o seu funcioamento. Na imagem a seguir, é possível ver a estrutura celular de organismos eucariontes e procariontes, respectivamente.
 
-```{r estruturaCelular, echo=FALSE, fig.cap="A figura à esquerda é uma célula eucarionte animal (Klug et al. 2019). A figura à direita representa uma célula eucarionte (Reece 2020)", fig.pos="h", out.width = '100%', out.height='100%'}
+```{r estruturaCelular, fig.cap="A figura à esquerda é uma célula eucarionte animal (Klug et al. 2019). A figura à direita representa uma célula eucarionte (Reece 2020)", out.width = '100%', out.height='100%'}
 knitr::include_graphics("../../imagens/estrutura_celular.png")
 ```
 
@@ -63,21 +69,36 @@ Existem várias definições do significado de um "gene". [@Brazma-2001] aponta 
 
 Todos os seres humanos apresentam 23 pares de cromossomos, e a diferenciabilidade entre as suas células, como em qualquer organismo multicelular, ocorre através da regulação da expressão gênica, que pode silenciar determinados genes para obter tipos específicos de células (como a da pele, por exemplo).
 
-### Sequenciamento
-
-
-
 
 # Epigenética e expressão gênica
 
 Embora todas as células de um organismo multicelular apresentem o mesmo conteúdo genético, suas funções e particularidades ocorrem a partir do regulamento da expressão gênica. Tal regulamento ocorre por meio de mecanismos epigenéticos, como a metilação do DNA, modificação de histonas e outros processos mediados por RNA, que influenciam principalmente a expressão gênica a nível de transcrição. [@Gibney-2010]
 
-O mecanismo estudado será a metilação da citosina (5mC), que acontece em áreas específicas de regulação, como regiões promotoras ou de heterocromatina. Esse fenômeno pode modificar, significativamente, a expressão temporal e espacial dos genes e a remodelação da cromatina [@Illumina-2017]. Em mamíferos, as citosinas metiladas estão restritas às CpGs, onde elas antecedem uma guanina (G) na direção de 5'. Vale lembrar que o DNA é formado por 4 nucleotídeos e portanto existem 16 possibilidades para se formar um par em sequência, o que ajuda a identificar as ilhas CpGs, pois estas apresentam uma frequência maior desse par quando comparadas com outras regiões arbitrárias. [@Gibney-2010]
+O mecanismo estudado será a metilação da citosina (5mC), que acontece em áreas específicas de regulação, como regiões promotoras ou de heterocromatina. Esse fenômeno pode modificar, significativamente, a expressão temporal e espacial dos genes e a remodelação da cromatina [@Illumina-2017]. Em mamíferos, as citosinas metiladas estão restritas às CpGs, onde elas antecedem uma guanina (G) na direção de 5'. Vale lembrar que o DNA é formado por 4 nucleotídeos e portanto existem 16 possibilidades para se formar um par em sequência, o que ajuda a identificar as ilhas CpGs, pois estas apresentam uma frequência maior desse par quando comparadas com outras regiões arbitrárias [@Gibney-2010]. A figura \ref{fig:metilacao} retrata a adição do grupo metil $CH_3$ à estrutura química de uma citosina [@Saini-2013].
+
+
+```{r metilacao, fig.cap="Metilação da citosina para 5-metilcitosina, que impede sua transcrição para uracila", out.width = '50%', out.height='25%', fig.align="center"}
+knitr::include_graphics("../../imagens/citosina_metilada.png")
+```
 
 
 # Microarranjos
 
 Microarranjos de DNA são arranjos de estruturas fixas de ácido nucleico, chamadas de sondas, cujos padrões foram definidos durante a construção ou depositados em um substrato sólido e plano, geralmente de vidro ou silício. Essas plataformas são utilizadas para investigar a quantidade de mRNA, ou genes expressos, presente na amostra biológica sob o experimento (experimento de hibridização). Atualmente, existe uma tendência em usar o sequênciamento de genes com o objetivo de desenvolver sondas e possibilitar a fabricação de microarranjos. [@scherer-2009]
+
+## Infinium MethylationEPIC BeadChip
+
+Infinium MethylationEPIC BeadChip (Figura \ref{fig:beadchip}) é o novo chip da Illumina, sucessor do Illumina HumanMethylation450 (HM450) BeadChip, que cobria aproximadamente 450.000 CpGs e utilizava a estrutura de sondas Infinium I. A nova tecnologia cobre mais de 90% das CpGs de HM450 e um adicional de 413.743, somando mais de 850 mil ilhas. Isso é possível por meio do uso das sondas Infinium II, que necessita apenas de 2 sondas por Locus. Além disso, das 413.743 CpGs adicionais, 95% utiliza as novas sondas. A alta proporção de sondas do tipo II ocupa menos espaço, maximizando sua quantidade, porém reduz o número de amostras mensuradas pelo chip de 12 (HM450) para 8 (EPIC). [@Pidsley-2016]
+
+```{r beadchip, fig.cap="O Infinium MethylationEPIC BeadChip apresenta > 850.000 CpGs em regiões potenciadoras, corpos gênicos, promotores e ilhas CpG. (Illumina 2015)", out.width = '100%', out.height='30%', fig.align="center"}
+knitr::include_graphics("../../imagens/Infinium_MethylationEPIC_BeadChip.png")
+```
+
+
+```{r beadtypes, fig.cap="Cobertura mais ampla usando projetos de ensaio Infinium I e II - O MethylationEPIC BeadChip utiliza os ensaios Infinium I e Infinium II. O Infinium I emprega 2 sondas por locus de CpG (cada CpG tem 2; metilado e não metilado), 1 para U e outro para M. Dessa forma, cada CpG tem 4 sondas. O design do Infinium II utiliza uma sonda por locus de CpG, isto é, 2 sondas por ilha.(Illumina 2015)", out.width = '100%', out.height='40%', fig.align="center"}
+knitr::include_graphics("../../imagens/bead_types.png")
+```
+
 
 # Análise de Dados de Metilação
 
