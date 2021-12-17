@@ -88,14 +88,14 @@ Microarranjos de DNA são arranjos de estruturas fixas de ácido nucleico, chama
 
 ## Infinium MethylationEPIC BeadChip
 
-Infinium MethylationEPIC BeadChip (Figura \ref{fig:beadchip}) é o novo chip da Illumina, sucessor do Illumina HumanMethylation450 (HM450) BeadChip, que cobria aproximadamente 450.000 CpGs e utilizava a estrutura de sondas Infinium I. A nova tecnologia cobre mais de 90% das CpGs de HM450 e um adicional de 413.743, somando mais de 850 mil ilhas. Isso é possível por meio do uso das sondas Infinium II, que necessita apenas de 2 sondas por Locus. Além disso, das 413.743 CpGs adicionais, 95% utiliza as novas sondas. A alta proporção de sondas do tipo II ocupa menos espaço, maximizando sua quantidade, porém reduz o número de amostras mensuradas pelo chip de 12 (HM450) para 8 (EPIC). [@Pidsley-2016]
+Infinium MethylationEPIC BeadChip (Figura \ref{fig:beadchip}) é o novo chip da Illumina, sucessor do Illumina HumanMethylation450 (HM450) BeadChip, que cobria aproximadamente 450.000 CpGs. O novo chip cobre mais de 90% das CpGs de HM450 e um adicional de 413.743, somando mais de 850 mil ilhas. Isso é possível devido ao uso das sondas Infinium II, que necessita apenas de 2 sondas (beads) por Locus. Além disso, das 413.743 CpGs adicionais, 95% utilizam as novas sondas. A alta proporção de sondas do tipo II ocupa menos espaço, maximizando sua quantidade, porém reduz o número de amostras mensuradas pelo chip de 12 (HM450) para 8 (EPIC). [@Pidsley-2016]
 
 ```{r beadchip, fig.cap="O Infinium MethylationEPIC BeadChip apresenta > 850.000 CpGs em regiões potenciadoras, corpos gênicos, promotores e ilhas CpG. (Illumina 2015)", out.width = '100%', out.height='30%', fig.align="center"}
 knitr::include_graphics("../../imagens/Infinium_MethylationEPIC_BeadChip.png")
 ```
 
 
-```{r beadtypes, fig.cap="Cobertura mais ampla usando projetos de ensaio Infinium I e II - O MethylationEPIC BeadChip utiliza os ensaios Infinium I e Infinium II. O Infinium I emprega 2 sondas por locus de CpG (cada CpG tem 2; metilado e não metilado), 1 para U e outro para M. Dessa forma, cada CpG tem 4 sondas. O design do Infinium II utiliza uma sonda por locus de CpG, isto é, 2 sondas por ilha.(Illumina 2015)", out.width = '100%', out.height='40%', fig.align="center"}
+```{r beadtypes, fig.cap="Cobertura mais ampla usando projetos de ensaio Infinium I e II - O MethylationEPIC BeadChip utiliza os ensaios Infinium I e Infinium II. O Infinium I emprega 2 sondas por locus de CpG, uma para metilado e outra para não metilado. O design do Infinium II utiliza uma sonda por locus de CpG.(Illumina 2015)", out.width = '100%', out.height='40%', fig.align="center"}
 knitr::include_graphics("../../imagens/bead_types.png")
 ```
 
