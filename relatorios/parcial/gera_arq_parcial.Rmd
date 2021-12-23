@@ -6,7 +6,7 @@ title: "Relatorio Parcial"
 ```{r}
 #BiocManager::install("IlluminaHumanMethylationEPICanno.ilm10b4.hg19")
 #BiocManager::install("missMethyl")
-BiocManager::install("minfiData")
+#BiocManager::install("minfiData")
 
 ```
 
@@ -26,7 +26,7 @@ library(maxprobes)
 # Carregando os dados
 
 ```{r}
-load("../../dados/rgSetSample.rds")
+load("../../data/rgSetSample.rds")
 ```
 
 ```{r}
@@ -35,7 +35,7 @@ dim(rgSet)
 
 # Passo a passo do Cross Package
 
-## Banco de dados dados amostrado
+## Banco de dados amostrado
 
 ```{r}
 annEPIC <- getAnnotation(IlluminaHumanMethylationEPICanno.ilm10b4.hg19)
@@ -52,6 +52,10 @@ Cada uma dessas amostras apresenta os arquivos green e red
 rgSet
 ```
 
+```{r}
+qcReport(rgSet, pdf = "qcReport.pdf")
+```
+
 ## Controle de qualidade
 
 ```{r}
@@ -59,18 +63,26 @@ detP <- data.frame(detectionP(rgSet))
 ```
 
 ```{r}
-write.csv(detP, "../../dados/pvalor.csv", row.names=T)
+write.csv(detP, "../../data/pvalor.csv", row.names=T)
 ```
 
 ```{r}
-detP = read.csv(file = "../../dados/pvalor.csv", row.names = 1)
+detP = read.csv(file = "../../data/pvalor.csv", row.names = 1)
 ```
 
 ```{r}
-barplot(colMeans(detP), las=2, cex.names=0.5, ylim=c(0,0.06))
-abline(h=0.05,col="red")
+barplot(colMeans(detP), las=2, cex.names=0.5, ylim=c(0,0.0012))
+abline(h=0.001,col="red")
 ```
 Legenda do gráfico: Média dos p-valores detectados nas CpG's para cada indivíduo.
+
+```{r}
+Mset <- preprocessRaw(rgSet)
+```
+
+```{r}
+plotQC(getQC(Mset))
+```
 
 ### Removendo as amostras com qualidade baixa
 
@@ -97,11 +109,11 @@ mSetSq <- preprocessQuantile(rgSet)
 ```
 
 ```{r, eval=FALSE}
-save(mSetSq,file="../../dados/mSetSq.rds")
+save(mSetSq,file="../../data/mSetSq.rds")
 ```
 
 ```{r}
-load("../../dados/mSetSq.rds")
+load("../../data/mSetSq.rds")
 ```
 
 ```{r}
@@ -120,10 +132,32 @@ boxplot(getBeta(rgSet),main="Dados Brutos", legend=FALSE)
 boxplot(getBeta(mSetSq),main="Dados Pré-processados", legend=FALSE)
 ```
 
+```{r}
+png(file = "../../../fileName3.png", width = 800, height = 600)
+densityBeanPlot(getBeta(mSetSq))
+dev.off()
+```
+
+```{r}
+mdsPlot(getBeta(mSetSq))
+```
+
+```{r}
+controlStripPlot(rgSet)
+```
+
 ## Exploração de dados
 
 ```{r}
+png(file = "../../../fileName.png") # defaults to 7 x 7 inches
 plotMDS(getM(mSetSq), top=1000, gene.selection="common")
+dev.off()
+```
+```{r}
+png(file = "../../../fileName2.png") # defaults to 7 x 7 inches
+plotMDS(getBeta(mSetSq), top=1000, gene.selection="common", main="teste")
+ylab("")
+dev.off()
 ```
 
 ## Filtragem
@@ -180,11 +214,11 @@ mSetSqFlt <- mSetSqFlt[keep,]
 <!-- Salvando os dados finais após todos os filtros -->
 
 ```{r}
-save(mSetSqFlt,file="../../dados/mSetSqFlt.rds")
+save(mSetSqFlt,file="../../data/mSetSqFlt.rds")
 ```
 
 ```{r}
-load("../../dados/mSetSqFlt.rds")
+load("../../data/mSetSqFlt.rds")
 ```
 
 <!-- Cálculo de M e Beta -->
@@ -201,12 +235,3 @@ bVals <- getBeta(mSetSqFlt)
 head(mVals[,1:5])
 head(bVals[,1:5])
 ```
-
-
-
-
-
-
-
-
-
