@@ -6,6 +6,7 @@ title: "Relatorio Parcial"
 ```{r}
 #BiocManager::install("IlluminaHumanMethylationEPICanno.ilm10b4.hg19")
 #BiocManager::install("missMethyl")
+BiocManager::install("minfiData")
 
 ```
 
@@ -16,7 +17,10 @@ library(IlluminaHumanMethylationEPICmanifest)
 library(IlluminaHumanMethylationEPICanno.ilm10b4.hg19)
 library(RColorBrewer)
 library(readr)
+library(maxprobes)
 #tidyverse::tidyverse_packages()
+#install.packages("remotes")
+#remotes::install_github("markgene/maxprobes")
 ```
 
 # Carregando os dados
@@ -34,7 +38,7 @@ dim(rgSet)
 ## Banco de dados dados amostrado
 
 ```{r}
-#annEPIC <- getAnnotation(IlluminaHumanMethylationEPICanno.ilm10b4.hg19)
+annEPIC <- getAnnotation(IlluminaHumanMethylationEPICanno.ilm10b4.hg19)
 #dim(annEPIC)
 ```
 46 informações de 865859 ilhas.
@@ -52,16 +56,19 @@ rgSet
 
 ```{r}
 detP <- data.frame(detectionP(rgSet))
-write_csv(detP, "../../dados/pvalor.csv")
 ```
 
 ```{r}
-detP = read.csv(file = "../../dados/pvalor.csv")
+write.csv(detP, "../../dados/pvalor.csv", row.names=T)
 ```
 
 ```{r}
-barplot(colMeans(detP), las=2, cex.names=0.5, ylim=c(0,0.0006))
-abline(h=0.0005,col="red")
+detP = read.csv(file = "../../dados/pvalor.csv", row.names = 1)
+```
+
+```{r}
+barplot(colMeans(detP), las=2, cex.names=0.5, ylim=c(0,0.06))
+abline(h=0.05,col="red")
 ```
 Legenda do gráfico: Média dos p-valores detectados nas CpG's para cada indivíduo.
 
@@ -133,17 +140,17 @@ table(keep)
 ```
 
 ```{r}
-remove(mSetSq)
+mSetSqFlt <- mSetSq[keep,]
 ```
 
 ```{r}
-mSetSqFlt <- mSetSq[keep,]
+remove(mSetSq)
 ```
 
 <!-- Filtragem das probes dos cromossomos de sexo -->
 
 ```{r}
-keep <- !(featureNames(mSetSqFlt) %in% ann450k$Name[ann450k$chr %in%
+keep <- !(featureNames(mSetSqFlt) %in% annEPIC$Name[annEPIC$chr %in%
 c("chrX","chrY")])
 table(keep)
 ```
@@ -156,18 +163,15 @@ mSetSqFlt <- mSetSqFlt[keep,]
 
 ```{r}
 mSetSqFlt <- dropLociWithSnps(mSetSqFlt)
-mSetSqFlt
 ```
 
-<!-- excluir sondas de reatividade cruzada
 ```{r}
-# NÃO CONSEGUI ACHAR ESTE ARQUIVO
-xReactiveProbes <- read.csv(file=paste(dataDirectory,
-"48639-non-specific-probes-Illumina450k.csv", sep="/"), stringsAsFactors=FALSE)
+xReactiveProbes <- xreactive_probes(array_type = "EPIC")
 
-keep <- !(featureNames(mSetSqFlt) %in% xReactiveProbes$TargetID)
+keep <- !(featureNames(mSetSqFlt) %in% xReactiveProbes)
 table(keep)
 ```
+
 ```{r}
 mSetSqFlt <- mSetSqFlt[keep,]
 ```
