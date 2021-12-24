@@ -6,10 +6,10 @@ bin-release/
 
 # Other files and folders
 .settings/
-dados/
-projetoic.Rproj
+data/
 .Rproj.user/
 .Rhistory
+_targets/
 
 # Executables
 *.swf
