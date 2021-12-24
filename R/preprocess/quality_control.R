@@ -28,4 +28,4 @@ pvalores <- function(rgSet){
 
 
 ######## TESTE
-check_teste <- function(){print(getwd())}
+#check_teste <- function(){print(getwd())}
