@@ -80,7 +80,7 @@ graf_rawVSnorm <- function(mSetSq, rgSet){
   dev.off(); gc()
 
   png(file = "imagens/densityBean_preprocessQuantile.png")
-  par(mfrow=c(1,2), mai=c(1.0,1.4,.8,.2))
+  par(mfrow=c(1,2), mai=c(1.0,1.4,.8,.5))
   minfi::densityBeanPlot(rgSet, main = "Dados Brutos")
   minfi::densityBeanPlot(minfi::getBeta(mSetSq), main = "Dados Pŕe-processados")
   dev.off(); gc()

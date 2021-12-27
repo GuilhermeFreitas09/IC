@@ -145,6 +145,8 @@ load("../../data/mSetSq.rds")
 dim(mSetSq)
 ```
 
+<!-- Dados brutos e dados pré-processados na mesma figura -->
+
 ```{r,fig.width=15}
 png(file = "../../imagens/densidades_preprocessQuantile.png")
 par(mfrow=c(2,1))
@@ -160,6 +162,8 @@ boxplot(getBeta(rgSet),main="Dados Brutos", ylab="Beta", legend=FALSE, col="#1f9
 boxplot(getBeta(mSetSq),main="Dados Pré-processados", ylab="Beta", legend=FALSE, col="#1f9e78", cex.axis=0.7, las=2)
 dev.off()
 ```
+
+<!-- Dados brutos e dados pré-processados em figuras diferentes -->
 
 ```{r}
 png(file = "../../imagens/rawData_preprocessQuantile.png")
@@ -177,6 +181,8 @@ boxplot(getBeta(mSetSq), ylab="Beta", legend=FALSE, col="#1f9e78", cex.axis=0.7,
 dev.off()
 ```
 
+<!-- Violin graph -->
+
 ```{r}
 png(file = "../../imagens/densityBean_preprocessQuantile.png")
 par(mfrow=c(1,2), mai=c(1.0,1.4,.8,.4))
@@ -185,6 +191,8 @@ densityBeanPlot(getBeta(mSetSq), main = "Dados Pŕe-processados")
 dev.off()
 ```
 
+<!-- Demais gráficos -->
+
 ```{r}
 mdsPlot(getBeta(mSetSq))
 ```
@@ -192,6 +200,29 @@ mdsPlot(getBeta(mSetSq))
 ```{r}
 controlStripPlot(rgSet)
 ```
+
+<!-- Código dos gráficos utilizados na pipeline -->
+
+```{r}
+png(file = "../../imagens/densidades_preprocessQuantile.png")
+par(mfrow=c(2,1))
+minfi::densityPlot(rgSet,main="Dados Brutos", legend=FALSE)
+minfi::densityPlot(minfi::getBeta(mSetSq),main="Dados Pré-processados", legend=FALSE)
+dev.off(); gc()
+
+png(file = "../../imagens/boxplots_preprocessQuantile.png")
+par(mfrow=c(2,1))
+boxplot(minfi::getBeta(rgSet),main="Dados Brutos", ylab="Beta", legend=FALSE, col="#1f9e78", cex.axis=0.7, las=2)
+boxplot(minfi::getBeta(mSetSq),main="Dados Pré-processados", ylab="Beta", legend=FALSE, col="#1f9e78", cex.axis=0.7, las=2)
+dev.off(); gc()
+
+png(file = "../../imagens/densityBean_preprocessQuantile.png")
+par(mfrow=c(1,2), mai=c(1.0,1.4,.8,.5))
+minfi::densityBeanPlot(rgSet, main = "Dados Brutos")
+minfi::densityBeanPlot(minfi::getBeta(mSetSq), main = "Dados Pŕe-processados")
+dev.off(); gc()
+```
+
 
 ## Exploração de dados
 
