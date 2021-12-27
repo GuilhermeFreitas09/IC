@@ -32,10 +32,9 @@ my_dependencies_check <- function(){
 
   if(!require("ggplot2")){install.packages("ggplot2")}
 
-
+  if(!require("crayon")){install.packages("crayon")}
 
 }
-
 
 # Carrega os pacotes
 my_libraries <- function(){
@@ -53,6 +52,3 @@ my_libraries <- function(){
   library(ggplot2)
 
 }
-
-my_dependencies_check()
-my_libraries()

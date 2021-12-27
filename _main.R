@@ -6,17 +6,14 @@ source("R/plan.R")
 start.time <- Sys.time()
 
 
-print("Checa as dependencias")
+cat(crayon::green("Checa as dependencias\n"))
+
 my_dependencies_check()
 
-print("Carrega os pacotes")
-my_libraries()
-
+# print("Carrega os pacotes"); my_libraries()
 
 plan(first_step)
 
 
-
 end.time <- Sys.time()
-print("Tempo de execução")
-print(end.time - start.time)
+cat(crayon::blue("Tempo de execução: \n", end.time - start.time, "\n"))

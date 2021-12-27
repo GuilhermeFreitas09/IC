@@ -1,73 +1,71 @@
 plan <- function(what_step){
   # Raw data
-  print("--RawData--")
+
+  cat(crayon::green("RawData\n"))
   load("data/rgSetSample.rds")
 
-  '
   # pré-processamento
-  '
-  print("--Pŕe-processamento--")
 
-  '
+  cat(crayon::green("Pŕe-processamento\n"))
+
   ## Controle de qualidade
-  '
-  print("Controle de qualidade")
 
-  ### Relatório de qualidade
-  qcrep(rgSet)
+  cat(crayon::green("  Controle de qualidade\n"))
 
-  ### QCplot
+  qcrep(rgSet); gc()
+
   mSet <- mset_gen(rgSet); grafQuality(mSet)
   remove(mSet); gc()
 
-  ### Cálculo matriz de pvaloes
+  cat(crayon::green("     Matriz de pvalores\n"))
+
   detP <- pvalores(rgSet)
 
-  ### Filtro das amostras
   keep <- filt_amost(detP)
   detP <- detP[,keep]; rgSet <- rgSet[,keep]
 
-  '
   ## Normalização
-  '
-  print("Normalização")
 
-  ### preprocessQuantile
-  mSetSq <- prepro_norm(rgSet)
+  cat(crayon::green("  Normalização\n"))
 
-  ### Gráficos
-  graf_rawVSnorm(mSetSq, rgSet)
+  mSetSq <- prepro_norm(rgSet); gc()
 
-  '
+  cat(crayon::green("     Gráficos\n"))
+
+  graf_rawVSnorm(mSetSq, rgSet);
+
+  rgsetSave(rgSet); remove(rgSet); gc()
+
+  detP <- detP[match(Biobase::featureNames(mSetSq),rownames(detP)),]
+  gc()
+
   ## Filtragem das probes (CpGs)
-  '
 
-  ###  Sondas/CpG's problemáticas (pvalor)
+  cat(crayon::green("  Filtragem das probes\n"))
+
   keep <- filtro_sondas(detP, mSetSq)
-  detP <- detP[,keep]; rgSet <- rgSet[,keep]; mSetSq <- mSetSq[,keep]
+  detP <- detP[keep,]; mSetSq <- mSetSq[keep,]
+  remove(keep); gc()
 
-  ### Filtragem das probes dos cromossomos de sexo
   keep <- filtro_crsx(mSetSq)
-  detP <- detP[,keep]; rgSet <- rgSet[,keep]; mSetSq <- mSetSq[,keep]
+  detP <- detP[keep,]; mSetSq <- mSetSq[keep,]
+  remove(keep); gc()
 
-  ### Remoção das sondas com SNP nos campos de CpGs
   keep <- filtro_snp(detP, mSetSq)
-  detP <- detP[,keep]; rgSet <- rgSet[,keep]; mSetSq <- mSetSq[,keep]
+  detP <- detP[keep,]; mSetSq <- mSetSq[keep,]
+  remove(keep); gc()
 
-  ### Exclusão de sondas com reatividade cruzada
   keep <- filtro_reatcruz(mSetSq)
-  detP <- detP[,keep]; rgSet <- rgSet[,keep]; mSetSq <- mSetSq[,keep]
-  remove(keep); qc()
+  detP <- detP[keep,]; mSetSq <- mSetSq[keep,]
+  remove(keep); gc()
 
-  '
   ## Salvando os objetos finais
-  '
-  print("Salva os objetos finais")
-  save_final_obj(mSetSq, detP, rgSet)
 
-  '
+  cat(crayon::green("  Salvando os objetos\n"))
+
+  save_final_obj(mSetSq, detP)
+
   # Machine Learning
-  '
 
 }
 

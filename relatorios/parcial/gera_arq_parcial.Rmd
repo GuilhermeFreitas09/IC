@@ -71,7 +71,7 @@ detP = read.csv(file = "../../data/pvalor.csv", row.names = 1)
 ```
 
 ```{r}
-png(file = "../../imagens/QCplot.png") # defaults to 7 x 7 inches
+png(file = "../../imagens/QCplotç.png") # defaults to 7 x 7 inches
 barplot(colMeans(detP), las=2, cex.names=0.5, ylim=c(0,0.0005))
 abline(h=0.00045,col="red")
 dev.off()
@@ -268,6 +268,65 @@ save(mSetSqFlt,file="../../data/mSetSqFlt.rds")
 
 ```{r}
 load("../../data/mSetSqFlt.rds")
+```
+
+<!-- Pré-processamento completo -->
+
+```{r}
+##  Sondas/CpG's problemáticas (pvalor)
+
+filtro_sondas <- function(detP, mSetSq){
+  return(rowSums(detP < 0.01) == ncol(mSetSq))
+}
+
+## Filtragem das probes dos cromossomos de sexo
+filtro_crsx <- function(mSetSq){
+  annEPIC <- getAnnotation(IlluminaHumanMethylationEPICanno.ilm10b4.hg19)
+  keep <- !(featureNames(mSetSq) %in% annEPIC$Name[annEPIC$chr %in% c("chrX","chrY")])
+  remove(annEPIC)
+  return(keep)
+}
+
+## Remoção das sondas com SNP nos campos de CpGs
+filtro_snp <- function(detP, mSetSq){
+  return(rownames(detP) %in% rownames(dropLociWithSnps(mSetSq)))
+}
+
+## Exclusão de sondas com reatividade cruzada
+filtro_reatcruz <- function(mSetSq){
+  return(!(featureNames(mSetSq) %in% xreactive_probes(array_type = "EPIC")))
+}
+
+# Salvando objetos finais
+save_final_obj <- function(mSetSq, detP){
+  save(mSetSq,file="data/mSetSqFinal.rds")
+  write.csv(detP, "data/pvaloFinal.csv", row.names=T)
+}
+```
+
+```{r}
+detP = read.csv(file = "../../data/pvalor.csv", row.names = 1)
+load("../../data/mSetSq.rds")
+
+detP <- detP[match(featureNames(mSetSq),rownames(detP)),]
+
+### Filtragem das sondas
+keep <- filtro_sondas(detP, mSetSq)
+detP <- detP[keep,]; mSetSq <- mSetSq[keep,]
+remove(keep); gc()
+
+### Filtragem das probes dos cromossomos de sexo
+keep <- filtro_crsx(mSetSq)
+detP <- detP[keep,]; mSetSq <- mSetSq[keep,]
+
+### Remoção das sondas com SNP nos campos de CpGs
+keep <- filtro_snp(detP, mSetSq)
+detP <- detP[keep,]; mSetSq <- mSetSq[keep,]
+
+### Exclusão de sondas com reatividade cruzada
+keep <- filtro_reatcruz(mSetSq)
+detP <- detP[keep,]; mSetSq <- mSetSq[keep,]
+remove(keep); gc()
 ```
 
 <!-- Cálculo de M e Beta -->
