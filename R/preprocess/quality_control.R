@@ -35,7 +35,7 @@ filt_amost <- function(detP){
   rownames(filtro_amostras) <- NULL; colnames(filtro_amostras) <- c("media", "amostra")
 
   grafico <- ggplot(filtro_amostras) +
-    geom_bar(aes(x = amostra, y = media), stat = "identity", fill="#599ad3") +
+    geom_bar(aes(x = amostra, y = media), stat = "identity", fill="#1f9e78") +
     geom_abline(slope = 0, intercept = 0.00045, color="red") +
     ylim(0, 0.0005) +
     xlab("Amostra") +
@@ -46,7 +46,7 @@ filt_amost <- function(detP){
           panel.background = element_blank(),
           axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-  ggsave(filename = "teste.png", plot = grafico, path = 'imagens/', height = 4)
+  ggsave(filename = "pvaluesMean_probes.png", plot = grafico, path = 'imagens/', height = 4)
 
   remove(grafico); remove(filtro_amostras); gc()
 
@@ -99,16 +99,16 @@ filtro_sondas <- function(detP, mSetSq){
 }
 
 ## Filtragem das probes dos cromossomos de sexo
-filtro_crsx <- function(mSet){
+filtro_crsx <- function(mSetSq){
   annEPIC <- getAnnotation(IlluminaHumanMethylationEPICanno.ilm10b4.hg19)
-  keep <- !(featureNames(mSetSqFlt) %in% annEPIC$Name[annEPIC$chr %in% c("chrX","chrY")])
+  keep <- !(featureNames(mSetSq) %in% annEPIC$Name[annEPIC$chr %in% c("chrX","chrY")])
   return(keep)
 }
 
 ## Remoção das sondas com SNP nos campos de CpGs
 filtro_snp <- function(detP, mSetSq){
   mSetSq <- dropLociWithSnps(mSetSq)
-  return(rownames(detP) %in% rownames(mSetSq))
+  return(rownames(detP) %in% rownames(mSetSq)) # teria que ser um getBeta aqui!
 }
 
 ## Exclusão de sondas com reatividade cruzada
@@ -121,7 +121,7 @@ filtro_reatcruz <- function(mSetSq){
 save_final_obj <- function(mSetSq, detP, rgSet){
   save(mSetSq,file="data/mSetSqFinal.rds")
   save(rgSet, file="data/rgSetFinal.rds")
-  write.csv(detP, "/data/pvaloFinal.csv", row.names=T)
+  write.csv(detP, "data/pvaloFinal.csv", row.names=T)
 }
 
 

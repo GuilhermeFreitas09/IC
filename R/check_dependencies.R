@@ -1,7 +1,9 @@
 # Checa dependências
 my_dependencies_check <- function(){
 
-  if(!require("Bioconductor")){install.packages("Bioconductor")}
+  if (!require("BiocManager", quietly = TRUE)){
+    install.packages("BiocManager")
+    BiocManager::install(version = "3.13")}
 
   if(!require("limma")){BiocManager::install("limma")}
 
@@ -26,7 +28,7 @@ my_dependencies_check <- function(){
     remotes::install_github("markgene/maxprobres")
   }
 
-  if(!require("dplyr")){install.packages("dplyr")
+  if(!require("dplyr")){install.packages("dplyr")}
 
   if(!require("ggplot2")){install.packages("ggplot2")}
 
@@ -35,7 +37,6 @@ my_dependencies_check <- function(){
 }
 
 
-'
 # Carrega os pacotes
 my_libraries <- function(){
 
@@ -52,4 +53,6 @@ my_libraries <- function(){
   library(ggplot2)
 
 }
-''
+
+my_dependencies_check()
+my_libraries()
