@@ -1,3 +1,4 @@
+# Checa dependências
 my_dependencies_check <- function(){
 
   if(!require("Bioconductor")){install.packages("Bioconductor")}
@@ -25,13 +26,19 @@ my_dependencies_check <- function(){
     remotes::install_github("markgene/maxprobres")
   }
 
-  if(!require("targets")){install.packages("targets")}
+  if(!require("dplyr")){install.packages("dplyr")
+
+  if(!require("ggplot2")){install.packages("ggplot2")}
+
+
 
 }
 
+
+'
+# Carrega os pacotes
 my_libraries <- function(){
 
-  library(targets)
   library(limma)
   library(minfi)
   library(minfiData)
@@ -41,5 +48,8 @@ my_libraries <- function(){
   library(RColorBrewer)
   library(readr)
   library(maxprobes)
+  library(dplyr)
+  library(ggplot2)
 
 }
+''

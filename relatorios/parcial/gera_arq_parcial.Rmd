@@ -71,9 +71,34 @@ detP = read.csv(file = "../../data/pvalor.csv", row.names = 1)
 ```
 
 ```{r}
-barplot(colMeans(detP), las=2, cex.names=0.5, ylim=c(0,0.0012))
-abline(h=0.001,col="red")
+png(file = "../../imagens/QCplot.png") # defaults to 7 x 7 inches
+barplot(colMeans(detP), las=2, cex.names=0.5, ylim=c(0,0.0005))
+abline(h=0.00045,col="red")
+dev.off()
 ```
+
+```{r}
+filtro_amostras <- data.frame(colMeans(detP))
+filtro_amostras$amostra <- rownames(filtro_amostras); rownames(filtro_amostras) <- NULL
+colnames(filtro_amostras) <- c("media", "amostra")
+```
+
+```{r}
+grafico <- ggplot(filtro_amostras) +
+  geom_bar(aes(x = amostra, y = media), stat = "identity", fill="#1f9e78") +
+  geom_abline(slope = 0, intercept = 0.00045, color="red") +
+  ylim(0, 0.0005) +
+  xlab("Amostra") +
+  ylab("Média") +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+ggsave(filename = "pvaluesMean_probes.png", plot = grafico, path = '../../imagens', height = 4)
+```
+
 Legenda do gráfico: Média dos p-valores detectados nas CpG's para cada indivíduo.
 
 ```{r}
@@ -121,20 +146,42 @@ dim(mSetSq)
 ```
 
 ```{r,fig.width=15}
+png(file = "../../imagens/densidades_preprocessQuantile.png")
 par(mfrow=c(2,1))
 densityPlot(rgSet,main="Dados Brutos", legend=FALSE)
 densityPlot(getBeta(mSetSq),main="Dados Pré-processados", legend=FALSE)
+dev.off()
 ```
 
 ```{r, fig.width=15}
-par(mfrow=c(1,2))
-boxplot(getBeta(rgSet),main="Dados Brutos", legend=FALSE)
-boxplot(getBeta(mSetSq),main="Dados Pré-processados", legend=FALSE)
+png(file = "../../imagens/boxplots_preprocessQuantile.png")
+par(mfrow=c(2,1))
+boxplot(getBeta(rgSet),main="Dados Brutos", ylab="Beta", legend=FALSE, col="#1f9e78", cex.axis=0.7, las=2)
+boxplot(getBeta(mSetSq),main="Dados Pré-processados", ylab="Beta", legend=FALSE, col="#1f9e78", cex.axis=0.7, las=2)
+dev.off()
 ```
 
 ```{r}
-png(file = "../../../fileName3.png", width = 800, height = 600)
-densityBeanPlot(getBeta(mSetSq))
+png(file = "../../imagens/rawData_preprocessQuantile.png")
+par(mfrow=c(2,1), mai=c(1.0,.8,.5,.2))
+densityPlot(rgSet, main="Dados Brutos", legend=FALSE)
+boxplot(getBeta(rgSet), ylab="Beta", legend=FALSE, col="#1f9e78", cex.axis=0.7, las=2)
+dev.off()
+```
+
+```{r}
+png(file = "../../imagens/quantileData_preprocessQuantile.png")
+par(mfrow=c(2,1), mai=c(1.0,.8,.5,.2))
+densityPlot(getBeta(mSetSq),main="Dados Pré-processados", legend=FALSE)
+boxplot(getBeta(mSetSq), ylab="Beta", legend=FALSE, col="#1f9e78", cex.axis=0.7, las=2)
+dev.off()
+```
+
+```{r}
+png(file = "../../imagens/densityBean_preprocessQuantile.png")
+par(mfrow=c(1,2), mai=c(1.0,1.4,.8,.4))
+densityBeanPlot(getBeta(rgSet), main = "Dados Brutos")
+densityBeanPlot(getBeta(mSetSq), main = "Dados Pŕe-processados")
 dev.off()
 ```
 
@@ -153,6 +200,7 @@ png(file = "../../../fileName.png") # defaults to 7 x 7 inches
 plotMDS(getM(mSetSq), top=1000, gene.selection="common")
 dev.off()
 ```
+
 ```{r}
 png(file = "../../../fileName2.png") # defaults to 7 x 7 inches
 plotMDS(getBeta(mSetSq), top=1000, gene.selection="common", main="teste")
@@ -184,8 +232,7 @@ remove(mSetSq)
 <!-- Filtragem das probes dos cromossomos de sexo -->
 
 ```{r}
-keep <- !(featureNames(mSetSqFlt) %in% annEPIC$Name[annEPIC$chr %in%
-c("chrX","chrY")])
+keep <- !(featureNames(mSetSqFlt) %in% annEPIC$Name[annEPIC$chr %in% c("chrX","chrY")])
 table(keep)
 ```
 
@@ -198,6 +245,8 @@ mSetSqFlt <- mSetSqFlt[keep,]
 ```{r}
 mSetSqFlt <- dropLociWithSnps(mSetSqFlt)
 ```
+
+<!-- xreactive -->
 
 ```{r}
 xReactiveProbes <- xreactive_probes(array_type = "EPIC")
