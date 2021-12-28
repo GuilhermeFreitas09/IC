@@ -19,10 +19,6 @@ my_dependencies_check <- function(){
   if(!require("IlluminaHumanMethylationEPICmanifest")){
     BiocManager::install("IlluminaHumanMethylationEPICmanifest")}
 
-  if(!require("RColorBrewer")){install.packages("RColorBrewer")}
-
-  if(!require("readr")){install.packages("readr")}
-
   if(!require("maxprobes")){
     if(!require("remotes")){install.packages("remotes")}
     remotes::install_github("markgene/maxprobres")
@@ -45,8 +41,6 @@ my_libraries <- function(){
   library(missMethyl)
   library(IlluminaHumanMethylationEPICanno.ilm10b4.hg19)
   library(IlluminaHumanMethylationEPICmanifest)
-  library(RColorBrewer)
-  library(readr)
   library(maxprobes)
   library(dplyr)
   library(ggplot2)

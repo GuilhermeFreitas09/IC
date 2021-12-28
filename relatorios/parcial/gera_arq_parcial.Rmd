@@ -15,15 +15,15 @@ library(limma)
 library(minfi)
 library(IlluminaHumanMethylationEPICmanifest)
 library(IlluminaHumanMethylationEPICanno.ilm10b4.hg19)
-library(RColorBrewer)
-library(readr)
 library(maxprobes)
 #tidyverse::tidyverse_packages()
 #install.packages("remotes")
 #remotes::install_github("markgene/maxprobes")
 ```
 
-# Carregando os dados
+# Pré-processamento
+
+## Carregando os dados
 
 ```{r}
 load("../../data/rgSetSample.rds")
@@ -33,7 +33,7 @@ load("../../data/rgSetSample.rds")
 dim(rgSet)
 ```
 
-# Passo a passo do Cross Package
+## Passo a passo do Cross Package
 
 ## Banco de dados amostrado
 
@@ -374,3 +374,58 @@ bVals <- getBeta(mSetSqFlt)
 head(mVals[,1:5])
 head(bVals[,1:5])
 ```
+
+
+
+
+# Modelagem
+
+```{r}
+list.files("../../data")
+```
+```{r}
+load("../../data/mSetSqFinal.rds")
+```
+
+```{r}
+matriz_betas <- minfi::getBeta(mSetSq)
+```
+
+```{r}
+head(matriz_betas)
+```
+
+```{r}
+dim(matriz_betas)
+```
+```{r}
+matriz_betas <- t(matriz_betas)
+```
+
+```{r}
+dim(matriz_betas)
+```
+## PCA (Não é possível)
+
+```{r}
+# essa função rotaciona a matriz de volta...
+pca <- prcomp(matriz_betas)
+```
+<!-- O SVD só é possível em base de dados com mais observações que variáveis! Pesquisar por mais soluções na internet-->
+
+## Matriz de distâncias
+
+## Clustering Hierárquico
+
+### Divisivo
+
+### Aglomerativo
+
+## Clustering baseados em centros
+
+### KMEANS
+
+### PAM
+
+
+
