@@ -1,6 +1,6 @@
 # Relatório de qualidade inicial
 qcrep <- function(rgSet){
-  minfi::qcReport(rgSet, pdf = "data/qcReport.pdf")
+  minfi::qcReport(rgSet, pdf = "relatorios/qcReport.pdf")
 }
 
 # Gráfico QC
