@@ -381,6 +381,15 @@ head(bVals[,1:5])
 # Modelagem
 
 ```{r}
+library(factoextra)
+library(cluster)
+library(parameters)
+library(clusterGenomics)
+BiocManager::install("M3C"); library(M3C)
+library(umap)
+```
+
+```{r}
 list.files("../../data")
 ```
 ```{r}
@@ -405,6 +414,18 @@ matriz_betas <- t(matriz_betas)
 ```{r}
 dim(matriz_betas)
 ```
+```{r}
+saveRDS(matriz_betas, file = "../../data/matriz_betas.rds")
+```
+
+```{r}
+saveRDS(minfi::getM(mSetSq), file = "../../data/matriz_m.rds")
+```
+
+```{r}
+matriz_betas <- readRDS("../../data/matriz_betas.rds")
+```
+
 ## PCA (Não é possível)
 
 ```{r}
@@ -413,15 +434,43 @@ pca <- prcomp(matriz_betas)
 ```
 <!-- O SVD só é possível em base de dados com mais observações que variáveis! Pesquisar por mais soluções na internet-->
 
+```{r}
+list.files("../../data")
+```
+
+## TSNE
+
+```{r}
+reducao_tsne <- M3C::tsne(matriz_betas)
+```
+
+<!-- Não funcionou. Muito demorado-->
+
+## UMAP
+
+```{r}
+reducao_umap <- umap::umap(matriz_betas)
+```
+
+```{r}
+plot(reducao_umap$layout)
+```
+
 ## Matriz de distâncias
+
+```{r}
+
+```
 
 ## Clustering Hierárquico
 
-### Divisivo
+### Encontrando o número de clutereres para o hierárquico
 
 ### Aglomerativo
 
-## Clustering baseados em centros
+### Divisivo
+
+## Clustering baseados em partições
 
 ### KMEANS
 
