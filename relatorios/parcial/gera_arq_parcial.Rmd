@@ -387,11 +387,14 @@ library(parameters)
 library(clusterGenomics)
 BiocManager::install("M3C"); library(M3C)
 library(umap)
+install.packages('pvclust')
+library(pvclust)
 ```
 
 ```{r}
 list.files("../../data")
 ```
+
 ```{r}
 load("../../data/mSetSqFinal.rds")
 ```
@@ -407,23 +410,17 @@ head(matriz_betas)
 ```{r}
 dim(matriz_betas)
 ```
+
 ```{r}
 matriz_betas <- t(matriz_betas)
 ```
 
 ```{r}
-dim(matriz_betas)
-```
-```{r}
-saveRDS(matriz_betas, file = "../../data/matriz_betas.rds")
+save(matriz_betas, file = "../../data/matriz_betas.rds")
 ```
 
 ```{r}
-saveRDS(minfi::getM(mSetSq), file = "../../data/matriz_m.rds")
-```
-
-```{r}
-matriz_betas <- readRDS("../../data/matriz_betas.rds")
+load("../../data/matriz_betas.rds")
 ```
 
 ## PCA (Não é possível)
@@ -453,18 +450,34 @@ reducao_umap <- umap::umap(matriz_betas)
 ```
 
 ```{r}
+save(reducao_umap, file = "../../data/umap_beta.rds")
+```
+
+```{r}
+load("../../data/umap_beta.rds")
+```
+
+```{r}
 plot(reducao_umap$layout)
 ```
 
 ## Matriz de distâncias
 
 ```{r}
+matriz_dist <- stats::dist(matriz_betas)
+```
 
+```{r}
+save(matriz_dist, file="../../data/matriz_dist")
 ```
 
 ## Clustering Hierárquico
 
 ### Encontrando o número de clutereres para o hierárquico
+
+```{r}
+bestnh <- parameters::n_clusters_hclust(matriz_betas)
+```
 
 ### Aglomerativo
 
