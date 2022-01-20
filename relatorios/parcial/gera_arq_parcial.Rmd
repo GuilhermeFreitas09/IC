@@ -468,7 +468,43 @@ matriz_dist <- stats::dist(matriz_betas)
 ```
 
 ```{r}
-save(matriz_dist, file="../../data/matriz_dist")
+save(matriz_dist, file="../../data/matriz_dist.rds")
+```
+
+```{r}
+load("../../data/matriz_dist.rds")
+```
+
+
+## PAM
+
+
+### Escolhendo o número de clusters
+
+```{r}
+
+for (i in 1:15) {
+  modelo_pam <- cluster::pam(matriz_dist, k=i)
+  cat("k=",i,modelo_pam$silinfo$avg.width, "\n")
+  remove(modelo_pam)
+}
+
+```
+
+## KMEANS
+
+```{r}
+#Elbow Method for finding the optimal number of clusters
+set.seed(123)
+# Compute and plot wss for k = 2 to k = 15.
+k.max <- 15
+wss <- sapply(1:k.max, 
+              function(k){kmeans(matriz_dist, k)$tot.withinss})
+
+plot(1:k.max, wss,
+     type="b", pch = 19, frame = FALSE, 
+     xlab="Number of clusters K",
+     ylab="Total within-clusters sum of squares")
 ```
 
 ## Clustering Hierárquico
@@ -483,11 +519,6 @@ bestnh <- parameters::n_clusters_hclust(matriz_betas)
 
 ### Divisivo
 
-## Clustering baseados em partições
-
-### KMEANS
-
-### PAM
 
 
 
