@@ -463,6 +463,8 @@ plot(reducao_umap$layout)
 
 ## Matriz de distâncias
 
+### Geral
+
 ```{r}
 matriz_dist <- stats::dist(matriz_betas)
 ```
@@ -475,20 +477,106 @@ save(matriz_dist, file="../../data/matriz_dist.rds")
 load("../../data/matriz_dist.rds")
 ```
 
+### UMAP
+
+```{r}
+load("../../data/umap_beta.rds")
+```
+
+```{r}
+umap_data <- data.frame(reducao_umap$layout)
+```
+
+```{r}
+matriz_dist_umap <- stats::dist(reducao_umap$layout)
+```
+
+```{r}
+save(matriz_dist_umap, file="../../data/matriz_dist_umap.rds")
+```
+
+```{r}
+load("../../data/matriz_dist_umap.rds")
+```
 
 ## PAM
 
 
 ### Escolhendo o número de clusters
 
-```{r}
+#### Função Elbow
 
+```{r}
+wss_func <- function(modelo_pam, matriz_dist){
+   '
+   modelo_pam: objeto gerado a partir da função pam()
+   matriz_dist <- objeto gerado a partir da função dist()
+   '
+   n <- length(modelo_pam$medoids); wss <- 0
+   matriz_dist <- data.frame(as.matrix(matriz_dist))
+   data <- data.frame(as.matrix(modelo_pam$clustering))
+   colnames(data) <- c('cluster')
+   for (j in 1:n) {
+     center <- modelo_pam$medoids[j]
+     elemen <- rownames(dplyr::filter(data, cluster==j))
+     for (el in elemen) { 
+       wss <- wss + (matriz_dist[el,center])^2
+     }
+   }
+   return(wss)
+}
+```
+
+#### Matriz geral de distâncias
+
+```{r}
+wss_final <- c()
 for (i in 1:15) {
   modelo_pam <- cluster::pam(matriz_dist, k=i)
-  cat("k=",i,modelo_pam$silinfo$avg.width, "\n")
+  cat("k =",i,modelo_pam$silinfo$avg.width, "\n")
+  wss_final[i] <- wss_func(modelo_pam, matriz_dist)
   remove(modelo_pam)
 }
+```
 
+```{r}
+plot(wss_final)
+```
+
+#### Matriz de distâncias UMAP
+
+```{r}
+wss_final <- c()
+for (i in 1:15) {
+  modelo_pam <- cluster::pam(matriz_dist_umap, k=i)
+  cat("k =",i,modelo_pam$silinfo$avg.width, "\n")
+  wss_final[i] <- wss_func(modelo_pam, matriz_dist)
+  remove(modelo_pam)
+}
+```
+
+
+```{r}
+plot(wss_final)
+```
+
+### Modelos
+
+#### Gráficos distância completa (usando o UMAP para printar)
+
+```{r}
+# Distância completa (Muitas dimensões)
+
+```
+
+#### Gráficos distância UMAP
+
+```{r}
+# Distãncia após UMAP
+data.frame(reducao_umap$layout) %>% 
+  ggplot() + 
+  geom_point(aes(x=X1, y=X2)) +
+  theme_minimal()
 ```
 
 ## KMEANS
