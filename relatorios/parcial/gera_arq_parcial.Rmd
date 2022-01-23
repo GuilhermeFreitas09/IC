@@ -389,6 +389,7 @@ BiocManager::install("M3C"); library(M3C)
 library(umap)
 install.packages('pvclust')
 library(pvclust)
+library(ggthemes)
 ```
 
 ```{r}
@@ -550,7 +551,7 @@ wss_final <- c()
 for (i in 1:15) {
   modelo_pam <- cluster::pam(matriz_dist_umap, k=i)
   cat("k =",i,modelo_pam$silinfo$avg.width, "\n")
-  wss_final[i] <- wss_func(modelo_pam, matriz_dist)
+  wss_final[i] <- wss_func(modelo_pam, matriz_dist_umap)
   remove(modelo_pam)
 }
 ```
@@ -562,24 +563,55 @@ plot(wss_final)
 
 ### Modelos
 
+```{r}
+dados_umap <- data.frame(reducao_umap$layout)
+```
+
 #### Gráficos distância completa (usando o UMAP para printar)
 
 ```{r}
-# Distância completa (Muitas dimensões)
+modelo_pam_completo <- cluster::pam(matriz_dist, k=2)
+```
 
+```{r}
+# Distância completa (Muitas dimensões)
+dados_umap %>%
+  mutate(cluster = factor(modelo_pam_completo$clustering)) %>%
+  ggplot() + 
+  geom_point(aes(x=X1, y=X2, color=cluster)) +
+  theme_bw() +
+  scale_colour_colorblind() +
+  labs(
+    x = 'UMAP 1',
+    y = 'UMAP 2',
+    colour = 'Cluster'
+  )
 ```
 
 #### Gráficos distância UMAP
 
 ```{r}
-# Distãncia após UMAP
-data.frame(reducao_umap$layout) %>% 
+modelo_pam_umap <- cluster::pam(matriz_dist_umap, k=2)
+```
+
+```{r}
+# Distância completa (Muitas dimensões)
+dados_umap %>%
+  mutate(cluster = factor(modelo_pam_umap$clustering)) %>%
   ggplot() + 
-  geom_point(aes(x=X1, y=X2)) +
-  theme_minimal()
+  geom_point(aes(x=X1, y=X2, color=cluster)) +
+  theme_bw() +
+  scale_colour_colorblind() +
+  labs(
+    x = 'UMAP 1',
+    y = 'UMAP 2',
+    colour = 'Cluster'
+  )
 ```
 
 ## KMEANS
+
+### Distância completa
 
 ```{r}
 #Elbow Method for finding the optimal number of clusters
@@ -595,13 +627,68 @@ plot(1:k.max, wss,
      ylab="Total within-clusters sum of squares")
 ```
 
+```{r}
+modelo_kmeans_completo <- kmeans(matriz_dist, 2)
+plot(silhouette(modelo_kmeans_completo$cluster, matriz_dist))
+```
+
+```{r}
+dados_umap %>%
+  mutate(cluster = factor(modelo_kmeans_completo$cluster)) %>%
+  ggplot() + 
+  geom_point(aes(x=X1, y=X2, color=cluster)) +
+  theme_bw() +
+  scale_colour_colorblind() +
+  labs(
+    x = 'UMAP 1',
+    y = 'UMAP 2',
+    colour = 'Cluster'
+  )
+```
+
+### Distãncia UMAP
+
+```{r}
+#Elbow Method for finding the optimal number of clusters
+set.seed(123)
+# Compute and plot wss for k = 2 to k = 15.
+k.max <- 15
+wss <- sapply(1:k.max, 
+              function(k){kmeans(matriz_dist_umap, k)$tot.withinss})
+
+plot(1:k.max, wss,
+     type="b", pch = 19, frame = FALSE, 
+     xlab="Number of clusters K",
+     ylab="Total within-clusters sum of squares")
+```
+
+```{r}
+modelo_kmeans_umap <- kmeans(matriz_dist_umap, 3)
+plot(silhouette(modelo_kmeans_umap$cluster, matriz_dist_umap))
+```
+
+```{r}
+dados_umap %>%
+  mutate(cluster = factor(modelo_kmeans_umap$cluster)) %>%
+  ggplot() + 
+  geom_point(aes(x=X1, y=X2, color=cluster)) +
+  theme_bw() +
+  scale_colour_colorblind() +
+  labs(
+    x = 'UMAP 1',
+    y = 'UMAP 2',
+    colour = 'Cluster'
+  )
+```
 ## Clustering Hierárquico
+
+<!-- Para cada método, gerar 3 modelos (um para cada um dos tipos de ligamento escolhidos-->
 
 ### Encontrando o número de clutereres para o hierárquico
 
-```{r}
-bestnh <- parameters::n_clusters_hclust(matriz_betas)
-```
+#### Distância completa
+
+#### Distância UMAP
 
 ### Aglomerativo
 
@@ -610,3 +697,5 @@ bestnh <- parameters::n_clusters_hclust(matriz_betas)
 
 
 
+
+ 
