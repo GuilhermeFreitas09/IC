@@ -44,5 +44,6 @@ my_libraries <- function(){
   library(maxprobes)
   library(dplyr)
   library(ggplot2)
+  library(crayon)
 
 }
