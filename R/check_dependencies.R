@@ -22,11 +22,29 @@ my_dependencies_check <- function(){
   if(!require("IlluminaHumanMethylationEPICmanifest", lib.loc = ll)){
     BiocManager::install("IlluminaHumanMethylationEPICmanifest", lib = ll)}
 
-  if(!require("maxprobes", lib.loc = ll)){
-    if(!require("remotes", lib.loc = ll)){install.packages("remotes", lib = ll)}
-    library(remotes)
-    remotes::install_github("markgene/maxprobres", lib = ll)
-  }
+   if(!require("maxprobes", lib.loc = ll)){
+     if(!require("devtools", lib.loc = ll)){install.packages("devtools", lib = ll)}
+     library(devtools, lib.loc=ll)
+     devtools::install_github("markgene/maxprobres", lib = ll)
+   }
+
+
+   '
+   if(!require("maxprobes", lib.loc = ll)){
+     if(!require("devtools", lib.loc = ll)){
+       if(!require("usethis", lib.loc = ll)){install.packages("usethis", lib=ll)}
+       library("usethis", lib=ll)
+       if(!require("ps", lib.loc = ll)){install.packages("ps", lib=ll)}
+       library("ps", lib=ll)
+       if(!require("withr", lib.loc = ll)){install.packages("withr", lib=ll)}
+       library("withr", lib=ll)
+       if(!require("desc", lib.loc = ll)){install.packages("desc", lib=ll)}
+       library("desc", lib=ll)
+     }
+     library(devtools, lib.loc=ll)
+     devtools::install_github("markgene/maxprobres", lib = ll)
+   }
+   ''
 
   if(!require("dplyr", lib.loc = ll)){install.packages("dplyr", lib = ll)}
 

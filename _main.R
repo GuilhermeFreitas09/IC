@@ -5,12 +5,17 @@ source("R/plan.R")
 
 start.time <- Sys.time()
 
+novalib <- .libPaths()
 
-print("Checa as dependencias")
+novalib <- c(novalib, '/home/lovelace/proj/proj858/gpereira/pacotesR')
+
+.libPaths(novalib)
+
+cat("Checa as dependencias")
 
 my_dependencies_check()
 
-print("Carrega os pacotes"); my_libraries()
+cat("Carrega os pacotes"); my_libraries()
 
 plan(first_step)
 

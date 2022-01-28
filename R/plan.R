@@ -28,6 +28,7 @@ plan <- function(what_step){
 
   cat(crayon::green("  Normalização\n"))
 
+  # https://support.bioconductor.org/p/122925/#124701
   mSetSq <- prepro_norm(rgSet); gc()
 
   cat(crayon::green("     Gráficos\n"))
