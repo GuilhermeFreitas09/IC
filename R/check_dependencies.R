@@ -4,7 +4,9 @@ my_dependencies_check <- function(){
   ll <- '/home/lovelace/proj/proj858/gpereira/pacotesR'
 
   if (!require("BiocManager", quietly = TRUE, lib.loc=ll)){
-    install.packages("BiocManager", lib = ll)
+    install.packages("BiocManager", lib = ll)}
+
+  library("BiocManager", lib.loc=ll)
 
   if(!require("limma", lib.loc = ll)){BiocManager::install("limma", lib = ll)}
 
@@ -22,6 +24,7 @@ my_dependencies_check <- function(){
 
   if(!require("maxprobes", lib.loc = ll)){
     if(!require("remotes", lib.loc = ll)){install.packages("remotes", lib = ll)}
+    library(remotes)
     remotes::install_github("markgene/maxprobres", lib = ll)
   }
 

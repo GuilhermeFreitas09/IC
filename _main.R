@@ -10,7 +10,7 @@ print("Checa as dependencias")
 
 my_dependencies_check()
 
-#print("Carrega os pacotes"); my_libraries()
+print("Carrega os pacotes"); my_libraries()
 
 plan(first_step)
 
