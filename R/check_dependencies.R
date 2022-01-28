@@ -3,9 +3,8 @@ my_dependencies_check <- function(){
 
   ll <- '/home/lovelace/proj/proj858/gpereira/pacotesR'
 
-  if (!require("BiocManager", quietly = TRUE, lib.loc=ll){
+  if (!require("BiocManager", quietly = TRUE, lib.loc=ll)){
     install.packages("BiocManager", lib = ll)
-    BiocManager::install(version = "3.13", lib = ll)}
 
   if(!require("limma", lib.loc = ll)){BiocManager::install("limma", lib = ll)}
 
@@ -22,7 +21,7 @@ my_dependencies_check <- function(){
     BiocManager::install("IlluminaHumanMethylationEPICmanifest", lib = ll)}
 
   if(!require("maxprobes", lib.loc = ll)){
-    if(!require("remotes", lib.loc = ll){install.packages("remotes", lib = ll)}
+    if(!require("remotes", lib.loc = ll)){install.packages("remotes", lib = ll)}
     remotes::install_github("markgene/maxprobres", lib = ll)
   }
 
