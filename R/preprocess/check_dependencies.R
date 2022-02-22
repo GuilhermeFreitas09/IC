@@ -45,5 +45,6 @@ my_libraries <- function(){
   library(dplyr)
   library(ggplot2)
   library(crayon)
+  library(M3C)
 
 }

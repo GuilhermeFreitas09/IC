@@ -544,6 +544,33 @@ for (i in 1:15) {
 plot(wss_final)
 ```
 
+```{r}
+
+#seq(1:15)
+
+#png(file = "line_chart_2_lines.jpg")
+
+plot(wss_final,type = "o",col = "red", xlab = "Month", ylab = "Rain fall", main = "Rain fall chart")
+
+lines(wss_final, col = "blue")
+
+#dev.off()
+```
+
+```{r}
+df <- data.frame(wss_final, seq(1:15))
+colnames(df) <- c('wss','sequ')
+```
+
+```{r}
+df %>% ggplot() + 
+  geom_line(aes(x=sequ, y=wss)) +
+  geom_point(aes(x=sequ, y=wss)) +
+  theme_bw() +
+  xlab("") +
+  ylab("WSS")
+```
+
 #### Matriz de distâncias UMAP
 
 ```{r}
@@ -560,6 +587,7 @@ for (i in 1:15) {
 ```{r}
 plot(wss_final)
 ```
+
 
 ### Modelos
 

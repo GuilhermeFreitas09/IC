@@ -2,7 +2,7 @@ plan <- function(what_step){
   # Raw data
 
   cat(crayon::green("RawData\n"))
-  load("data/rgSetSample.rds")
+  load("../../data/rgSetSample.rds")
 
   # pré-processamento
 
@@ -64,8 +64,6 @@ plan <- function(what_step){
   cat(crayon::green("  Salvando os objetos\n"))
 
   save_final_obj(mSetSq, detP)
-
-  # Machine Learning
 
 }
 
