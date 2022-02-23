@@ -1,6 +1,5 @@
 source("check_dependencies.R")
 source("quality_control.R")
-source("../what_steps.R")
 source("plan.R")
 
 start.time <- Sys.time()
@@ -12,7 +11,7 @@ my_dependencies_check()
 
 #print("Carrega os pacotes"); my_libraries()
 
-plan(first_step)
+plan()
 
 
 end.time <- Sys.time()

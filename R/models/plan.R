@@ -1,4 +1,4 @@
-plan <- function(what_step){
+plan <- function(){
 
   # Carregando dados iniciais e calculando/salvando matriz de betas
 

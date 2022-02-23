@@ -1,4 +1,4 @@
-plan <- function(what_step){
+plan <- function(){
   # Raw data
 
   cat(crayon::green("RawData\n"))
