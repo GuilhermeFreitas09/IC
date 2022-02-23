@@ -1,6 +1,6 @@
 source("check_dependencies.R")
 source("clustering.R")
-#source("what_steps.R")
+source("../what_steps.R")
 source("plan.R")
 
 start.time <- Sys.time()
