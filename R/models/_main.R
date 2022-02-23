@@ -4,7 +4,7 @@ source("plan.R")
 
 start.time <- Sys.time()
 
-print("Checa as dependencias")
+cat("Checa as dependencias")
 
 my_dependencies_check_models()
 
