@@ -6,6 +6,12 @@ source("plan.R")
 start.time <- Sys.time()
 
 
+#novalib <- .libPaths()
+
+#novalib <- c(novalib, '/home/lovelace/proj/proj858/gpereira/pacotesR')
+
+#.libPaths(novalib)
+
 print("Checa as dependencias")
 
 my_dependencies_check()
