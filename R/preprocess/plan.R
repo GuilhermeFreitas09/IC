@@ -2,7 +2,7 @@ plan <- function(what_step){
   # Raw data
 
   cat(crayon::green("RawData\n"))
-  load("../../data/rgSetSample.rds")
+  load("../../data/rgSet.rds")
 
   # pré-processamento
 
