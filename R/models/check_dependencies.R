@@ -10,4 +10,6 @@ my_dependencies_check_models <- function(){
 
   if(!require("cluster")){install.packages("cluster")}
 
+  if(!require("ggthemes")){install.packages("ggthemes")}
+
 }

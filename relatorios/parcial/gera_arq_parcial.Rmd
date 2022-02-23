@@ -385,9 +385,7 @@ library(factoextra)
 library(cluster)
 library(parameters)
 library(clusterGenomics)
-BiocManager::install("M3C"); library(M3C)
 library(umap)
-install.packages('pvclust')
 library(pvclust)
 library(ggthemes)
 ```
@@ -563,11 +561,16 @@ colnames(df) <- c('wss','sequ')
 ```
 
 ```{r}
+library(dplyr)
+```
+
+
+```{r}
 df %>% ggplot() + 
   geom_line(aes(x=sequ, y=wss)) +
   geom_point(aes(x=sequ, y=wss)) +
   theme_bw() +
-  xlab("") +
+  xlab("Número de clusteres") +
   ylab("WSS")
 ```
 

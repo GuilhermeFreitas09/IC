@@ -25,36 +25,37 @@ wss_pam_final <- function(matriz_dist){
   wss_final <- c()
   for (i in 1:15) {
     modelo_pam <- cluster::pam(matriz_dist, k=i)
-    wss_final[i] <- wss_func(modelo_pam, matriz_dist)
+    wss_final[i] <- wss_func_pam(modelo_pam, matriz_dist)
     remove(modelo_pam)
   }
   gc()
-  returm(wss_final)
+  return(wss_final)
 }
 
 wss_fig_pam <-function(wss_final){
-  df <- data.frame(wss, seq(1:15))
+  df <- data.frame(wss_final, seq(1:15))
   colnames(df) <- c('wss','sequ')
-  df %>% ggplot() +
-    geom_line(aes(x=sequ, y=wss)) +
-    geom_point(aes(x=sequ, y=wss)) +
-    theme_bw() +
-    xlab("") +
-    ylab("WSS")
+  grafico <- ggplot2::ggplot(df) +
+    ggplot2::geom_line(aes(x=sequ, y=wss)) +
+    ggplot2::geom_point(aes(x=sequ, y=wss)) +
+    ggplot2::theme_bw() +
+    ggplot2::xlab("Número de clusters") +
+    ggplot2::ylab("WSS")
+    # WSS = Within Cluster Sum of Squares (WSS) = Soma dos Quadrados Intra-cluster
+    ggplot2::ggsave(filename = "wss_fig_pam.png", plot = grafico, path = '../../imagens/models_images/', height = 4)
 }
 
-fig_pam_final <- function(modelo_pam, df){
-  df %>%
-    mutate(cluster = factor(modelo_pam$clustering)) %>%
-    ggplot() +
-    geom_point(aes(x=X1, y=X2, color=cluster)) +
-    theme_bw() +
-    scale_colour_colorblind() +
-    labs(
+fig_pam_final <- function(modelo_pam, dados_umap){
+  grafico <- ggplot2::ggplot(mutate(dados_umap, cluster = factor(modelo_pam$clustering))) +
+    ggplot2::geom_point(aes(x=X1, y=X2, color=cluster)) +
+    ggplot2::theme_bw() +
+    ggthemes::scale_colour_colorblind() +
+    ggplot2::labs(
       x = 'UMAP 1',
       y = 'UMAP 2',
       colour = 'Cluster'
     )
+    ggplot2::ggsave(filename = "fig_pam_final.png", plot = grafico, path = '../../imagens/models_images/', height = 4)
 }
 
 # Kmeans
@@ -65,19 +66,33 @@ wss_kmeans <- function(matriz_dist){
 }
 
 silh_kmeans <- function(modelo_kmeans, matriz_dist){
+  png(file = "../../imagens/models_images/silhouette_kmeans.jpg")
   plot(silhouette(modelo_kmeans$cluster, matriz_dist))
+  dev.off()
 }
 
-fig_kmeans_final <- function(modelo_kmeans, df){
-  df %>%
-    mutate(cluster = factor(modelo_kmeans$cluster)) %>%
-    ggplot() +
-    geom_point(aes(x=X1, y=X2, color=cluster)) +
-    theme_bw() +
-    scale_colour_colorblind() +
-    labs(
+fig_kmeans_final <- function(modelo_kmeans, dados_umap){
+  grafico <- ggplot2::ggplot(mutate(dados_umap, cluster = factor(modelo_kmeans$cluster))) +
+    ggplot2::geom_point(aes(x=X1, y=X2, color=cluster)) +
+    ggplot2::theme_bw() +
+    ggthemes::scale_colour_colorblind() +
+    ggplot2::labs(
       x = 'UMAP 1',
       y = 'UMAP 2',
       colour = 'Cluster'
     )
+    ggplot2::ggsave(filename = "fig_kmeans_final.png", plot = grafico, path = '../../imagens/models_images/', height = 4)
+}
+
+wss_fig_kmeans <-function(wss_final){
+  df <- data.frame(wss_final, seq(1:15))
+  colnames(df) <- c('wss','sequ')
+  grafico <- ggplot2::ggplot(df) +
+    ggplot2::geom_line(aes(x=sequ, y=wss)) +
+    ggplot2::geom_point(aes(x=sequ, y=wss)) +
+    ggplot2::theme_bw() +
+    ggplot2::xlab("Número de clusters") +
+    ggplot2::ylab("WSS")
+    # WSS = Within Cluster Sum of Squares (WSS) = Soma dos Quadrados Intra-cluster
+    ggplot2::ggsave(filename = "wss_fig_kmeans.png", plot = grafico, path = '../../imagens/models_images/', height = 4)
 }
