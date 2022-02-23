@@ -38,6 +38,9 @@ my_dependencies_check <- function(){
 
 # Carrega os pacotes
 my_libraries <- function(){
+
+  ll <- '/home/lovelace/proj/proj858/gpereira/pacotesR'
+
   library(limma, lib.loc = ll)
   library(minfi, lib.loc = ll)
   library(minfiData, lib.loc = ll)
