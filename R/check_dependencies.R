@@ -44,7 +44,7 @@ my_dependencies_check <- function(){
      library(devtools, lib.loc=ll)
      devtools::install_github("markgene/maxprobres", lib = ll)
    }
-   ''
+   '
 
   if(!require("dplyr", lib.loc = ll)){install.packages("dplyr", lib = ll)}
 
