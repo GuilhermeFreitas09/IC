@@ -67,23 +67,29 @@ prepro_norm <- function(rgSet){
 ## Gráficos
 graf_rawVSnorm <- function(mSetSq, rgSet){
 
-  png(file = "imagens/densidades_preprocessQuantile.png")
+  pdf(file="imagens/demais_graficos.pdf")
+
+  par(mfow=c(3,1))
+
+  #png(file = "imagens/densidades_preprocessQuantile.png")
   par(mfrow=c(2,1))
   minfi::densityPlot(rgSet,main="Dados Brutos", legend=FALSE)
   minfi::densityPlot(minfi::getBeta(mSetSq),main="Dados Pré-processados", legend=FALSE)
-  dev.off(); gc()
+  #dev.off(); gc()
 
-  png(file = "imagens/boxplots_preprocessQuantile.png")
+  #png(file = "imagens/boxplots_preprocessQuantile.png")
   par(mfrow=c(2,1))
   boxplot(minfi::getBeta(rgSet),main="Dados Brutos", ylab="Beta", legend=FALSE, col="#1f9e78", cex.axis=0.7, las=2)
   boxplot(minfi::getBeta(mSetSq),main="Dados Pré-processados", ylab="Beta", legend=FALSE, col="#1f9e78", cex.axis=0.7, las=2)
-  dev.off(); gc()
+  #dev.off(); gc()
 
-  png(file = "imagens/densityBean_preprocessQuantile.png")
+  #png(file = "imagens/densityBean_preprocessQuantile.png")
   par(mfrow=c(1,2), mai=c(1.0,1.4,.8,.5))
   minfi::densityBeanPlot(rgSet, main = "Dados Brutos")
   minfi::densityBeanPlot(minfi::getBeta(mSetSq), main = "Dados Pŕe-processados")
-  dev.off(); gc()
+  #dev.off(); gc()
+
+  dev.off()
 
   # mdsPlot(getBeta(mSetSq))
 
