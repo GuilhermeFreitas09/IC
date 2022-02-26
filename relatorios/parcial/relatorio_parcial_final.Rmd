@@ -1,0 +1,91 @@
+---
+title: "Aplicação de métodos de aprendizado de máquina não-supervisionado em dados de metilação de DNA de pacientes de COVID-19 \\par Relatório Parcial"
+lang: "pt-br"
+author: 
+- "Orientadora:  Profa. Samara Kiihl"
+- "Aluno: Guilherme Pereira de Freitas"
+header-includes:
+- \usepackage{float} #use the 'float' package
+- \floatplacement{figure}{H} #make every figure with caption = h
+output: 
+  bookdown::pdf_document2:
+    toc: no
+fontsize: 12pt
+geometry: margin=1.25in
+bibliography: referencias.bib
+link-citations: yes
+abstract: "O presente trabalho tem como objetivo explorar as principais técnicas de pré-processamento de dados de metilação de DNA, bem como utilizar e desenvolver métodos de Aprendizado de Máquina não Supervisionado em dados de pacientes de Covid-19 [@CastrodeMoura2021]. Além disso, passaremos por algumas técnicas computacionais que nos ajudarão a cumprir com o objetivo, como o UMAP (Uniform Manifold Approximation and Projection for Dimension Reduction), para redução de dimensões, e o gráfico de Elbow junto a Silhueta, para definir o melhor número de clusters. Todos os códigos desenvolvidos estão expostos no repositório do Github. \\par Palavras-chave: bioinformática, metilação de DNA, aprendizado de máquina não supervisionado, métodos de agrupamento, COVID-19, EWAS"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, fig.pos="H")
+```
+
+# Introdução
+
+Embora boa parte das células de um organismo multicelular apresentem o mesmo conteúdo genético, suas funções e particularidades ocorrem a partir do regulamento da expressão gênica. Tal regulamento ocorre por meio de mecanismos epigenéticos, como a metilação do DNA, modificação de histonas e outros processos mediados por RNA, que influenciam principalmente a expressão gênica a nível de transcrição. [@Gibney-2010]
+
+O mecanismo estudado será a metilação da citosina (5mC), que acontece em áreas específicas de regulação, como regiões promotoras ou de heterocromatina. Esse fenômeno pode modificar, significativamente, a expressão temporal e espacial dos genes e a remodelação da cromatina [@Illumina-2017]. Em mamíferos, as citosinas metiladas estão restritas às CpGs, onde elas antecedem uma guanina (G) na direção de 5'. Vale lembrar que o DNA é formado por 4 nucleotídeos e portanto existem 16 possibilidades para se formar um par em sequência, o que ajuda a identificar as ilhas CpGs, pois estas apresentam uma frequência maior desse par quando comparadas com outras regiões arbitrárias [@Gibney-2010]. A figura \ref{fig:metilacao} retrata a adição do grupo metil $CH_3$ à estrutura química de uma citosina [@Saini-2013].
+
+```{r metilacao, fig.cap="Metilação da citosina para 5-metilcitosina, que impede sua transcrição para uracila", out.width = '50%', out.height='25%', fig.align="center"}
+knitr::include_graphics("../../imagens/citosina_metilada.png")
+```
+
+
+# Microarranjos
+
+Microarranjos de DNA são arranjos de estruturas fixas de ácido nucleico, chamadas de sondas, cujos padrões foram definidos durante a construção ou depositados em um substrato sólido e plano, geralmente de vidro ou silício. Essas plataformas são utilizadas para investigar a quantidade de mRNA, ou genes expressos, presente na amostra biológica sob o experimento (experimento de hibridização). Atualmente, existe uma tendência em usar o sequênciamento de genes com o objetivo de desenvolver sondas e possibilitar a fabricação de microarranjos. [@scherer-2009]
+
+## Infinium MethylationEPIC BeadChip
+
+Infinium MethylationEPIC BeadChip (Figura \ref{fig:beadchip}) é o novo chip da Illumina, sucessor do Illumina HumanMethylation450 (HM450) BeadChip, que cobria aproximadamente 450.000 CpGs. O novo chip cobre mais de 90% das CpGs de HM450 e um adicional de 413.743, somando mais de 850 mil ilhas. Isso é possível devido ao uso das sondas Infinium II, que necessita apenas de 2 sondas (beads) por Locus. Além disso, das 413.743 CpGs adicionais, 95% utilizam as novas sondas. A alta proporção de sondas do tipo II ocupa menos espaço, maximizando sua quantidade, porém reduz o número de amostras mensuradas pelo chip de 12 (HM450) para 8 (EPIC). [@Pidsley-2016]
+
+```{r beadchip, fig.cap="O Infinium MethylationEPIC BeadChip apresenta > 850.000 CpGs em regiões potenciadoras, corpos gênicos, promotores e ilhas CpG. (Illumina 2015)", out.width = '100%', out.height='30%', fig.align="center"}
+knitr::include_graphics("../../imagens/Infinium_MethylationEPIC_BeadChip.png")
+```
+
+
+# Pré-processamento
+
+O fluxo de pré-processamento será feito seguindo o passo a passo descrito no artigo "A cross-package Biodonductor workflow for analysing methylation array data" [@Maksimovic2016], por meio das ferramentas dispostas no pacote Bioconductor [@bioconductor], disponíveis para a linguagem R [@R].
+
+## Filtro das amostras
+
+## Normalização quantílica
+
+## Filtro das sondas
+
+- defeituosas
+- relativas a ilhas CpGs de sexo
+
+## Remoção das sondas com SNP nos campos de CpGs
+
+## Exclusão de sondas com reatividade cruzada
+
+
+# Aprendizado de Máquina não Supervisionado
+
+- Matriz de distâncias
+
+- Elbow
+
+- Silhueta
+
+## KMEANS
+
+	2.1) Melhor número de clusters via elbow e silhueta
+	2.2) Modelagem
+	2.3) print do resultado usando as dimensões reduzidas
+
+## PAM
+
+	3.1) Melhor número de clusters via elbow e silhueta
+	3.2) Modelagem
+	3.3) print do resultado usando as dimensões reduzidas
+
+\newpage
+
+
+
+
+
