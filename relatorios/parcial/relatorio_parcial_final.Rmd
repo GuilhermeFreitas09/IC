@@ -1,17 +1,18 @@
 ---
-title: "Aplicação de métodos de aprendizado de máquina não-supervisionado em dados de metilação de DNA de pacientes de COVID-19 \\par Relatório Parcial"
-lang: "pt-br"
-date: "`r format(Sys.time(), '%d/%m/%Y')`"
+title: ""
 author: 
-- "Orientadora:  Profa. Samara Kiihl"
-- "Aluno: Guilherme Pereira de Freitas"
-header-includes:
-- \usepackage{float} #use the 'float' package
-- \floatplacement{figure}{H} #make every figure with caption = h
+date: 
 output: 
-  bookdown::pdf_document2:
-    toc: no
+  pdf_document:
+    includes:
+      before_body: body.tex
+      in_header: head.tex
+    fig_caption: true
+    number_sections: true
 fontsize: 12pt
+documentclass: article
+header-includes:
+  \AtBeginDocument{\let\maketitle\relax}
 geometry: margin=1.25in
 bibliography: referencias.bib
 link-citations: yes
@@ -114,6 +115,8 @@ Para escolher o número de grupos, em cada um dos métodos, utilizaremos as téc
 	3.2) Modelagem
 
 \newpage
+
+# Referências
 
 
 
