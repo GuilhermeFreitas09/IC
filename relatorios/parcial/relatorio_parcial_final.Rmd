@@ -1,18 +1,17 @@
 ---
-title: ""
-author: 
-date: 
-output: 
+title: ''
+author: "null"
+date: "null"
+output:
   pdf_document:
     includes:
       before_body: body.tex
       in_header: head.tex
-    fig_caption: true
-    number_sections: true
+    fig_caption: yes
+    number_sections: yes
 fontsize: 12pt
 documentclass: article
-header-includes:
-  \AtBeginDocument{\let\maketitle\relax}
+header-includes: \AtBeginDocument{\let\maketitle\relax}
 geometry: margin=1.25in
 bibliography: referencias.bib
 link-citations: yes
@@ -28,7 +27,9 @@ knitr::opts_chunk$set(echo = FALSE, fig.pos="H")
 
 # Resumo
 
-O presente trabalho tem como objetivo explorar as principais técnicas de pré-processamento de dados de metilação de DNA, bem como utilizar e desenvolver métodos de Aprendizado de Máquina não Supervisionado em dados de metilação de pacientes de Covid-19 [@CastrodeMoura2021]. Além disso, passaremos por algumas técnicas computacionais que nos ajudarão a cumprir com o objetivo, como o UMAP (Uniform Manifold Approximation and Projection for Dimension Reduction), para redução de dimensões, e o gráfico de Elbow junto a Silhueta, para definir o melhor número de clusters. Todos os códigos desenvolvidos estão expostos no repositório do Github. \\par Palavras-chave: bioinformática, metilação de DNA, aprendizado de máquina não supervisionado, métodos de agrupamento, COVID-19, EWAS
+O presente trabalho tem como objetivo explorar as principais técnicas de pré-processamento de dados de metilação de DNA, bem como utilizar e desenvolver métodos de Aprendizado de Máquina não Supervisionado em dados de metilação de pacientes de Covid-19 [@CastrodeMoura2021]. Além disso, passaremos por algumas técnicas computacionais que nos ajudarão a cumprir com o objetivo, como o UMAP (Uniform Manifold Approximation and Projection for Dimension Reduction), para redução de dimensões, e o gráfico de Elbow junto a Silhueta, para definir o melhor número de clusters. Todos os códigos desenvolvidos estão expostos no repositório do Github. 
+
+\textbf{Palavras-chave:} bioinformática, metilação de DNA, aprendizado de máquina não supervisionado, métodos de agrupamento, COVID-19, EWAS
 
 # Introdução
 
@@ -63,11 +64,13 @@ Para cada ilha CpG, o chipe registra suas intensidades de metilado e não metila
 $$
 \beta = \frac{M}{M+U}
 $$
-Ta que M é a proporção de metilado e U é a proporção de não metilado. Outra técnica muito utilizada para medir o nível de metilação é dada por $M value = log2(\frac{M}{U})$. É muito comum somar um $\alpha$ ao denominador de $\beta$, para evitar cenários de divisão por zero quando $M + U \longrightarrow 0$.
+Note que M é a intensidade de metilado e U é a proporção de não metilado. Outra técnica muito utilizada para medir o nível de metilação é dada por $M value = log2(\frac{M}{U})$. É muito comum somar um $\alpha$ ao denominador de $\beta$, para evitar cenários de divisão por zero quando $M + U \longrightarrow 0$.
 
 # Pré-processamento
 
 O fluxo de pré-processamento será feito seguindo o passo a passo descrito no artigo "A cross-package Biodonductor workflow for analysing methylation array data" [@Maksimovic2016], por meio das ferramentas dispostas no pacote Bioconductor [@bioconductor], disponíveis para a linguagem R [@R]. Os agoritmos são aplicados na matriz de p-valores, cujo cálculo será descrito na seção seguinte. Vale enfatizar que o controle de qualidade das amostras é vital para a análise dos dados, pois permite minimizar enviesamentos e ter mais confiança em alguma conclusão sobre o efeito da Covid-19 nos pacientes.
+
+Devido a limitações computacionais para realizar as etapas de pré-processamento, esse trabalho usou recursos do Centro Nacional de Processamento de Alto Desempenho em São Paulo (CENAPAD-SP). 
 
 ## Matriz de p-valores
 
@@ -91,8 +94,7 @@ O terceiro filtro busca remover as sondas afetadas por SNPs (Single Nucleotide P
 
 
 # Aprendizado de Máquina não Supervisionado
-
-Falar sobre o que é aprendizado não supervisionado...
+O Aprendizado de Máquina não Supervisionado também é conhecido como análise de cluster, ou análise de agrupamento. Uma das maiores diferenças entre Aprendizado de Máquina supervisionado e não supervisionado está na falta de dados de treinamento para a última, bem como a falta de um target para tal. Os pré-requisitos para aplicar as técnicas de agrupamento se dão na escolha das variáveis e hiperparâmetros, tema que será discutido a seguir. [@Gentleman2008]
 
 Com a matriz final dos betas pré-processados, podemos calcular a matriz de dissimilaridade entre os indivíduos por meio da distância euclidiana, dada pela fórmula $D(X,Y) = \sqrt{\sum_{i}^{n}(x_i - y_i)^2}$, onde $n$ é o número total de CpGs e X e Y são os vetores de betas de dois indivíduos.
 
@@ -104,16 +106,36 @@ Para escolher o número de grupos, em cada um dos métodos, utilizaremos as téc
 - Gráfico de Elbow: O Gráfico de Elbow é uma curva construída a partir da Soma de Quadrados Intra-cluster, cuja fórmula é dada por $WSS = \sum_{k=1}^{K}\sum_{i\in S_{k}}\sum_{j=1}^{p} (x_{ij}-\bar{x}_{kj})^{2}$ [@hinduja_2015]. O melhor número de clusteres é obtido no ponto de maior inclinação da curva.
 
 
-## KMEANS
+## K-Médias
 
-	2.1) Melhor número de clusters via elbow e silhueta
-	2.2) Modelagem
+O método das K-Médias [@kmeans] é uma técnica de agrupamento que funciona a partir de um parâmetro inicial, o número de clusters. Nesse algoritmo, buscar o melhor agrupamento é entendido como buscar pela partição $\mathcal{C}_1,...,\mathcal{C}_K$ das observações, tal que se obtenha o menor valor possível para o seguinte somatório [@AME]:
+
+$$
+\sum_{k=1}^{K}\frac{1}{|\mathcal{C}_k|}\sum_{i,j \in \mathcal{C}_k}d^{2}(x_i, x_j)
+$$
+Esse somatório representa a soma de quadrados dentro de cada cluster. O algoritmo de k-médias é iterativo e funciona da seguinte forma: na primeira iteração, toma-se k amostras (centroids) e liga cada uma das observaçõs ao centroid mais próximo; em seguida calcula-se a média das observações de cada cluster e obtém k novos centroids. Esses passos são executados até minimizar a soma anterior.
 
 ## PAM
 
-	3.1) Melhor número de clusters via elbow e silhueta
-	3.2) Modelagem
+O algoritmo PAM - Partition Around Medoids [@pamalg] é muito similar ao k-means, o que o faz também ser conhecido como k-medoids, pois o mesmo busca encontrar um "elemento central" dentro das próprias observações, chamado de medoid, que minimiza a distância entre as observações mais próximas, formando assim um cluster. Para escolher os novos medoids em cada observação, calcula-se a observação que produz a menor soma de dissimilaridade com relação às outras observações. Com os novos medoids determinados, aloca-se todas as observações ao cluster mais próximo e repete as etapas anteriores. 
 
+<!--O medoid j, por exemplo, é dado por $c_j \in (x_1,x_2,...,x_{n-1},x_n)$, onde $x_i$ é a observação $i$. Os passos do método pam podem ser descritos da seguinte forma:
+
+\begin{enumerate}
+    \item  Escolha uma amostra de tamanho k (medoids) dentro das observações.
+    \item  Para cada observação da base de dados, relacione-a com o medoid mais próximo.
+    \item  Para cada cluster formado pelo medoid j, ache o elemento que reproduz a menor dissimilaridade entre os outros do mesmo grupo, e transforme-o no novo medoid.
+    \item Reproduza as etapas 2 e 3 até que os medoids não mudem de uma iteração para outra.
+\end{enumerate}-->
+
+
+## Custering Hierárquico
+
+Os métodos de clustering hierárquico funcionam de tal forma que, dado um cojunto de g clusters, ao obtermos outro cojunto de g+1 a partir do inicial temos que ambos conjuntos de clusters apresentam g-1 grupos idênticos, e o grupo remanecente é dividido em dois. Existem diversas técnicas dessa família; as mais famosas são a de Single-Linkage, que considera a distância entre dois grupos como sendo a distância entre seus pontos mais próximos, e a Complete-Linkage, que considera a distância entre dois grupos como sendo a distância entre seus dois pontos mais distantes. Ambas as técnicas apresentam diferentes versões de agrupamentos, como a aglomerativa e a diviso.[@Mardia1979]
+	
+# Próximos passos
+
+Os próximos passos consistirão na plicação, avaliação, visualização e discussão dos métodos utilizados no conjunto de dados. Além disso, será feito a disponibilização de todos os códigos para a análise de dados na plataforma GitHub.
 \newpage
 
 # Referências
