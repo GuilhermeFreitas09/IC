@@ -381,11 +381,16 @@ head(bVals[,1:5])
 # Modelagem
 
 ```{r}
-library(factoextra)
+if(!require(devtools)) install.packages("devtools")
+devtools::install_github("kassambara/factoextra")
+```
+
+```{r}
+#library(factoextra)
 library(cluster)
 library(parameters)
-library(clusterGenomics)
-library(umap)
+#library(clusterGenomics)
+#library(umap)
 library(pvclust)
 library(ggthemes)
 ```
@@ -694,7 +699,7 @@ plot(1:k.max, wss,
 ```
 
 ```{r}
-modelo_kmeans_umap <- kmeans(matriz_dist_umap, 3)
+modelo_kmeans_umap <- kmeans(matriz_dist_umap, 2)
 plot(silhouette(modelo_kmeans_umap$cluster, matriz_dist_umap))
 ```
 
@@ -719,14 +724,95 @@ dados_umap %>%
 
 #### Distância completa
 
-#### Distância UMAP
-
 ### Aglomerativo
+
+```{r}
+m <- c( "average", "single", "complete", "ward")
+names(m) <- c( "average", "single", "complete", "ward")
+
+# function to compute coefficient
+ac <- function(df, x) {
+  hc3 <- agnes(df, method = x)
+  pltree(hc3, cex=0.4) 
+  return(hc3$ac)
+}
+
+for(me in m){
+  print(ac(matriz_dist, me))
+}
+```
+
+```{r}
+hc5 <- hclust(matriz_dist, method = "ward.D2" )
+
+sub_grp <- cutree(hc5, k = 2)
+
+sub_grp
+```
+
+```{r}
+
+m = c("ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median", "centroid")
+
+for(i in m){
+  hc5 <- hclust(matriz_dist, method = i)
+  plot(hc5, cex = 0.4)
+  rect.hclust(hc5, k = 2, border = 2:5)
+}
+```
+
 
 ### Divisivo
 
 
+```{r}
+hc4 <- diana(matriz_dist)
+```
+
+```{r}
+plot(hc4)
+```
+
+#### Distância UMAP
+
+### Aglomerativo
+
+```{r}
+m <- c( "average", "single", "complete", "ward")
+names(m) <- c( "average", "single", "complete", "ward")
+
+# function to compute coefficient
+ac <- function(df, x) {
+  hc3 <- agnes(df, method = x)
+  pltree(hc3, cex=0.4) 
+  return(hc3$ac)
+}
+
+for(me in m){
+  print(ac(matriz_dist_umap, me))
+}
+```
+
+```{r}
+
+m = c("ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median", "centroid")
+
+for(i in m){
+  hc5 <- hclust(matriz_dist_umap, method = i)
+  plot(hc5, cex = 0.4)
+  rect.hclust(hc5, k = 2, border = 2:5)
+}
+```
+
+### Divisivo
 
 
+```{r}
+hc4 <- diana(matriz_dist_umap)
+```
+
+```{r}
+plot(hc4)
+```
 
  
