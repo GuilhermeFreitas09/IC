@@ -1,0 +1,146 @@
+---
+title: ''
+author: "null"
+date: "null"
+output:
+  pdf_document:
+    includes:
+      before_body: body.tex
+      in_header: head.tex
+    fig_caption: yes
+    number_sections: yes
+fontsize: 12pt
+documentclass: article
+header-includes: \AtBeginDocument{\let\maketitle\relax}
+geometry: margin=1.25in
+bibliography: referencias.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, fig.pos="H")
+```
+
+
+
+\newpage
+
+# Resumo
+
+O presente trabalho tem como objetivo explorar as principais técnicas de pré-processamento de dados de metilação de DNA, bem como aplicar métodos de Aprendizado de Máquina não Supervisionado em dados de metilação de pacientes de Covid-19. Além disso, passaremos por algumas técnicas computacionais que nos ajudarão a cumprir com o objetivo, como o gráfico de Elbow junto a Silhueta, para definir o melhor número de clusters.
+
+\textbf{Palavras-chave:} bioinformática, metilação de DNA, aprendizado de máquina não supervisionado, métodos de agrupamento, COVID-19, EWAS
+
+
+# Introdução
+
+Embora todas as células de um organismo apresentem, essencialmente, o mesmo conteúdo genético, suas funções e particularidades se dão por meio do regulamento da expressão gênica. Tal regulamento ocorre por meio de mecanismos epigenéticos, como a metilação do DNA, modificação de histonas e outros processos mediados por RNA, que influenciam principalmente a expressão gênica a nível de transcrição [@Gibney2010].
+
+O mecanismo estudado será a metilação da citosina (5mC), que acontece em áreas específicas de regulação, como regiões promotoras ou de heterocromatina. Esse fenômeno pode modificar, significativamente, a expressão temporal e espacial dos genes e a remodelação da cromatina [@Heyn2012]. Em mamíferos, as citosinas metiladas estão restritas às CpGs (citosina-fosfato-guanina), onde elas antecedem uma guanina (G) na direção de 5'. Vale lembrar que o DNA é formado por 4 nucleotídeos e portanto existem 16 possibilidades para se formar um par em sequência, o que ajuda a identificar as ilhas CpGs, pois estas apresentam uma frequência maior desse par (CG) quando comparadas com outras regiões arbitrárias [@Gibney2010]. <!--A figura \ref{fig:metilacao} retrata a adição do grupo metil $CH_3$ à estrutura química de uma citosina [@Saini-2013].
+
+```{r metilacao, fig.cap="Metilação da citosina para 5-metilcitosina, que impede sua transcrição para uracila", out.width = '50%', out.height='25%', fig.align="center"}
+knitr::include_graphics("../../imagens/citosina_metilada.png")
+```
+-->
+
+
+# Microarranjos
+
+Microarranjos de DNA são arranjos de estruturas fixas de ácido nucleico, chamadas de sondas, cujos padrões foram definidos durante a construção ou depositados em um substrato sólido e plano, geralmente de vidro ou silício. Essas plataformas são utilizadas para investigar a quantidade de mRNA, ou genes expressos, presente na amostra biológica sob o experimento (experimento de hibridização). Atualmente, existe uma tendência em usar o sequênciamento de genes com o objetivo de desenvolver sondas e possibilitar a fabricação de microarranjos [@scherer-2009].
+
+# Banco de dados
+
+O banco de dados utilizado foi retirado do estudo de associação epigenômica ampla (EWS - \textit{epigenome-wide association study}) de COVID-19 realizado por [@CastrodeMoura2021]. Os dados estão disponíveis no repositório público \textit{The Gene Expression Omnibus} (GEO), sob código de acesso GSE168739. Trata-se de 407 pacientes de COVID-19 sem comorbidades, com idade máxima de 61 anos. Os dados foram coletados através da plataforma \textit{Infinium MethylationEPIC BeadChip}, totalizando em 850 mil ilhas CpGs para cada indivíduo.
+
+## Infinium MethylationEPIC BeadChip
+
+<!-- (Figura \ref{fig:beadchip})-->
+
+O Infinium MethylationEPIC BeadChip é o novo chip da Illumina, sucessor do Illumina HumanMethylation450 (HM450) BeadChip, que cobria aproximadamente 450.000 CpGs. O novo chip cobre mais de 90% das CpGs de HM450 e um adicional de 413.743, somando mais de 850 mil ilhas. Isso é possível devido ao uso das sondas Infinium II, que necessita apenas de 2 sondas (beads) por Locus. Além disso, das 413.743 CpGs adicionais, 95% utilizam as novas sondas. A alta proporção de sondas do tipo II ocupa menos espaço, maximizando sua quantidade, porém reduz o número de amostras mensuradas pelo chip de 12 (HM450) para 8 (EPIC) [@Pidsley-2016].
+
+<!--
+```{r beadchip, fig.cap="O Infinium MethylationEPIC BeadChip apresenta > 850.000 CpGs em regiões potenciadoras, corpos gênicos, promotores e ilhas CpG. (Illumina 2015)", out.width = '100%', out.height='30%', fig.align="center"}
+knitr::include_graphics("../../imagens/Infinium_MethylationEPIC_BeadChip.png")
+```
+-->
+
+Para cada ilha CpG, o chipe registra suas intensidades de metilado e não metilado, de modo que os níveis de metilação são obtidos através da fórmula $\beta = \frac{M}{M+U}$, tal que M é a intensidade de metilado e U é a intensidade de não metilado. Outra técnica muito utilizada para medir o nível de metilação é dada por $M value = log2(\frac{M}{U})$. É muito comum somar um $\alpha$ ao denominador de $\beta$, para evitar cenários de divisão por zero quando $M + U \longrightarrow 0$ e arrumar a escala dos coeficientes [@Maksimovic2016]. 
+
+# Pré-processamento
+
+O fluxo de pré-processamento será feito seguindo o passo a passo descrito no artigo "A cross-package Biodonductor workflow for analysing methylation array data" [@Maksimovic2016], por meio das ferramentas dispostas no pacote Bioconductor [@bioconductor], disponíveis para a linguagem R [@R]. Os agoritmos são aplicados na matriz de p-valores, cujo cálculo será descrito na seção seguinte. Vale enfatizar que o controle de qualidade das amostras é vital para a análise dos dados, pois permite minimizar enviesamentos e ter mais confiança em realizar alguma conclusão sobre o efeito da Covid-19 nos pacientes.
+
+Devido a limitações computacionais para realizar as etapas de pré-processamento, esse trabalho usou recursos do Centro Nacional de Processamento de Alto Desempenho em São Paulo (CENAPAD-SP). 
+
+## Matriz de p-valores
+
+A matriz de p-valores é obtida comparando-se a distribuição das intensidades, para cada par de indivíduos e ilhas, com a distribuição do ruído de fundo (que por sua vez, foi calculado a partir das sondas de controle). Cada um dos ensaios (tipo I e tipo II) apresenta sua distribuição própria do ruído de fundo, bem como a intensidade de metilação dos indivíduos.
+
+Como exemplo, tomemos um indivíduo qualquer presente no banco. O primeiro passo é filtrar as sondas de controle, em cada um dos tipos de ensaios, e em seguida obter os parâmetros de três distribuições normais $\mathcal{N}(2\mu, 2\sigma^2)$ (Red, Green, Green+Red), onde $\mu$ é a mediana e $\sigma^2$ é o desvio absoluto mediano das intensidades para essas sondas. Após isso, devemos obter a intensidade de metilação total do indivíduo em cada ilha e calcular a probabilidade de cada uma dessas intensidades ser uma amostra da distribuição normal obtida no início [@Aryee2014].
+
+## Filtro das amostras
+
+O primeiro filtro de qualidade é aplicado com o intuito de remover as amostras de baixa qualidade. Para cada indivíduo, vemos se a média dos p-valores é menor que um nível de significância $\alpha$. Aqui, adotamos $\alpha=0.05$, por recomendação do artigo de referência.
+
+## Normalização quantílica
+
+A normalização quantílica [@Touleimat2012] é uma técnica de pré-processamento que realiza diversas correções no conjunto de dados. Sua pipeline é composta, respectivamente, pelas etapas de controle de qualidade, filtro das sondas, correção de sinais e normalização quantílica baseada em subconjuntos. A etapa de controle de qualidade estuda os efeitos de laboratório para estimar a qualidade das sondas e das amostras, já a etapa de filtro consiste em remover as sondas cuja variação do nível de metilação pode ocorrer devido a variações genéticas. A etapa de correção de sinais aplica uma normalização quantílica suave para corrigir possíveis problemas de marcação e escaneamento dos canais de cores. Por fim, a última etapa aplica uma normalização robusta para corrigir possíveis enviesamentos, nos valores de betas, causados pelo uso dos dois tipos de ensaios (Inf I e Inf II) no chip do experimento.
+
+## Filtro das sondas
+
+Nessa etapa, aplicou-se diversos filtros diferentes. O primeiro é mais simples, e cacula a média dos p-valores dos indivíduos, fixando-se ilha por ilha, e segue apenas com as CpG's que registrarem valores inferiores a $\alpha=0.01$. O segundo filtro tem como objetivo remover as sondas dos cromossomos X e Y, para evitar possíveis tendências de metilação dadas pelo sexo do paciente. 
+
+O terceiro filtro busca remover as sondas afetadas por SNPs (Single Nucleotide Polymorphism) em seus campos, para evitar possíveis enviesamentos, pois o nível de metilação captado pelo sinal pode ser decorrente de CpGs polimórficas que sobrepuseram regiões de SNPs. Por último, é importante remover as sondas que demonstraram ser reativo-cruzadas, ou em inglês, cross-reactive, pois as mesmas se ligam a múltiplos trechos do genoma [@Chen2013].
+
+
+# Aprendizado de máquina não-supervisionado
+
+O aprendizado de máquina não-supervisionado também é conhecido como análise de cluster, ou análise de agrupamento. Uma das maiores diferenças entre aprendizado de máquina supervisionado e não-supervisionado está na falta de dados de treinamento para a última, bem como a falta de um target para tal. Os pré-requisitos para aplicar as técnicas de agrupamento se dão na escolha das variáveis, hiperparâmetros e tipo de distância adotada [@Gentleman2008].
+
+
+Com a matriz final dos betas pré-processados, podemos calcular a matriz de dissimilaridade entre os indivíduos por meio da distância euclidiana, dada pela fórmula $D(X,Y) = \sqrt{\sum_{i}^{n}(x_i - y_i)^2}$, onde $n$ é o número total de CpGs e X e Y são os vetores de betas de dois indivíduos.
+
+Para escolher o número de grupos, em cada um dos métodos, utilizaremos as técnicas de Silhueta e Gráfico de Elbow.
+
+- Silhueta: Dado um conjunto de clusteres $\Lambda$, temos que a silhueta da observação i presente no cluster $\lambda_k$ é dada por $s_{i\lambda_k} = \frac{b_i - a_i}{max(b_i, a_i)}$, onde $a_i$ é a dissimilaridade de i com relação aos elementos do cluster $\lambda_k$ (que o contém) e $b_i$ é a menor dissimilaridade de i com relação aos elementos de outro cluster $\lambda$, ou seja, $b_i = min_{\lambda \neq \lambda_k}d(i,\lambda)$ [@silhueta].
+
+
+- Método de Elbow: O Método de Elbow [@hayasaka_2022] é uma curva construída a partir da Soma de Quadrados Intra-cluster, ou inércia, cuja fórmula é dada por $WSS = \sum_{k=1}^{K}\sum_{i\in S_{k}}\sum_{j=1}^{p} (x_{ij}-\bar{x}_{kj})^{2}$ [@hinduja_2015]. O melhor número de clusteres é obtido no ponto de maior inclinação da curva.
+
+
+## K-Médias
+
+O método das K-Médias [@kmeans] é uma técnica de agrupamento que funciona a partir de um parâmetro inicial, o número de clusteres. Nesse algoritmo, buscar o melhor agrupamento é entendido como buscar pela partição $\mathcal{C}_1,...,\mathcal{C}_K$ das observações, tal que se obtenha o menor valor possível para o somatório $\sum_{k=1}^{K}\frac{1}{|\mathcal{C}_k|}\sum_{i,j \in \mathcal{C}_k}d^{2}(x_i, x_j)$
+[@AME].
+
+Esse somatório representa a soma de quadrados dentro de cada cluster. O algoritmo de K-Médias é iterativo e funciona da seguinte forma: na primeira iteração, toma-se k amostras (centroids) e liga cada uma das observaçõs ao centroid mais próximo; em seguida calcula-se a média das observações de cada cluster e obtém k novos centroids. Esses passos são executados até minimizar a soma anterior.
+
+## PAM
+
+O algoritmo PAM - Partition Around Medoids [@pamalg] é muito similar ao K-Médias, o que o faz também ser conhecido como K-Medoids, pois o mesmo busca encontrar um "elemento central" dentro das próprias observações, chamado de medoid, que minimiza a distância entre as observações mais próximas, formando assim um cluster. Para escolher os novos medoids em cada cluster, obtêm-se o ponto que produz a menor soma de dissimilaridade com relação às outras observações. Com os novos medoids determinados, aloca-se todas as observações ao cluster mais próximo e repete as etapas anteriores. 
+
+<!--O medoid j, por exemplo, é dado por $c_j \in (x_1,x_2,...,x_{n-1},x_n)$, onde $x_i$ é a observação $i$. Os passos do método pam podem ser descritos da seguinte forma:
+
+\begin{enumerate}
+    \item  Escolha uma amostra de tamanho k (medoids) dentro das observações.
+    \item  Para cada observação da base de dados, relacione-a com o medoid mais próximo.
+    \item  Para cada cluster formado pelo medoid j, ache o elemento que reproduz a menor dissimilaridade entre os outros do mesmo grupo, e transforme-o no novo medoid.
+    \item Reproduza as etapas 2 e 3 até que os medoids não mudem de uma iteração para outra.
+\end{enumerate}-->
+
+
+## Clustering Hierárquico
+
+Os métodos de clustering hierárquico funcionam de tal forma que, dado um cojunto de g clusters, ao obtermos outro cojunto de g+1 a partir do inicial temos que ambos conjuntos de clusters apresentam g-1 grupos idênticos, e o grupo remanecente é dividido em dois. Existem diversas técnicas dessa família; as mais famosas são a de Single-Linkage, que considera a distância entre dois grupos como sendo a distância entre seus pontos mais próximos, e a Complete-Linkage, que considera a distância entre dois grupos como sendo a distância entre seus dois pontos mais distantes. Ambas as técnicas apresentam diferentes versões de agrupamentos, como a aglomerativa e a divisa [@Mardia1979].
+	
+# Próximos passos
+
+Os próximos passos consistirão na aplicação, avaliação, visualização e discussão dos métodos utilizados no conjunto de dados. Para visualização, srá explorado técnicas de redução de dimensões, como Multidimensional Scaling (MDS) [@Hout2012] e Uniform Manifold Approximation and Projection (UMAP) [@mcinnes2020umap]. Além disso, será feita a disponibilização de todos os códigos para a análise de dados na plataforma GitHub, com o passo a passo para reproduzir a execução de todos os algoritmos.
+\newpage
+
+# Referências
+
+
+
+
+

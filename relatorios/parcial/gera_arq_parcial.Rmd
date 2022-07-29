@@ -378,18 +378,22 @@ head(bVals[,1:5])
 
 
 
-# Modelagem
+# Modelagem com a amostra
 
 ```{r}
-library(factoextra)
+if(!require(devtools)) install.packages("devtools")
+devtools::install_github("kassambara/factoextra")
+```
+
+```{r}
+#library(factoextra)
 library(cluster)
 library(parameters)
-library(clusterGenomics)
-BiocManager::install("M3C"); library(M3C)
-library(umap)
-install.packages('pvclust')
+#library(clusterGenomics)
+#library(umap)
 library(pvclust)
 library(ggthemes)
+library(ggplot2)
 ```
 
 ```{r}
@@ -539,9 +543,45 @@ for (i in 1:15) {
   remove(modelo_pam)
 }
 ```
+```{r}
+wss_final
+```
 
 ```{r}
 plot(wss_final)
+```
+
+```{r}
+
+#seq(1:15)
+
+#png(file = "line_chart_2_lines.jpg")
+
+plot(wss_final,type = "o",col = "red", xlab = "Month", ylab = "Rain fall", main = "Gráfico de Elbow - PAM")
+
+lines(wss_final, col = "blue")
+
+#dev.off()
+```
+
+```{r}
+df <- data.frame(wss_final, seq(1:15))
+colnames(df) <- c('wss','sequ')
+```
+
+```{r}
+library(dplyr)
+```
+
+
+```{r}
+df %>% ggplot() + 
+  geom_line(aes(x=sequ, y=wss)) +
+  geom_point(aes(x=sequ, y=wss)) +
+  theme_bw() +
+  xlab("Número de clusteres") +
+  ylab("WSS") +
+  ggtitle("Gráfico de Elbow - PAM")
 ```
 
 #### Matriz de distâncias UMAP
@@ -556,10 +596,14 @@ for (i in 1:15) {
 }
 ```
 
+```{r}
+wss_final
+```
 
 ```{r}
 plot(wss_final)
 ```
+
 
 ### Modelos
 
@@ -573,6 +617,24 @@ dados_umap <- data.frame(reducao_umap$layout)
 modelo_pam_completo <- cluster::pam(matriz_dist, k=2)
 ```
 
+
+```{r}
+calcular_silhueta <- function(modelo, mat){
+  vec = c()
+  for(i in 1:60){
+    vec = append(vec,modelo$clustering[i][[1]])
+  }
+  sum(data.frame(silhouette(x=vec, dist = mat))$sil_width)/60
+}
+
+```
+
+
+```{r}
+calcular_silhueta(modelo_pam_completo, mat=matriz_dist)
+```
+
+
 ```{r}
 # Distância completa (Muitas dimensões)
 dados_umap %>%
@@ -585,7 +647,9 @@ dados_umap %>%
     x = 'UMAP 1',
     y = 'UMAP 2',
     colour = 'Cluster'
-  )
+  ) +
+  ggtitle("PAM - Matriz Completa") +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 #### Gráficos distância UMAP
@@ -606,7 +670,9 @@ dados_umap %>%
     x = 'UMAP 1',
     y = 'UMAP 2',
     colour = 'Cluster'
-  )
+  )+
+  ggtitle("PAM - Matriz UMAP") +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 ## KMEANS
@@ -643,7 +709,9 @@ dados_umap %>%
     x = 'UMAP 1',
     y = 'UMAP 2',
     colour = 'Cluster'
-  )
+  )+
+  ggtitle("K-Médias - Matriz Completa") +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 ### Distãncia UMAP
@@ -663,7 +731,7 @@ plot(1:k.max, wss,
 ```
 
 ```{r}
-modelo_kmeans_umap <- kmeans(matriz_dist_umap, 3)
+modelo_kmeans_umap <- kmeans(matriz_dist_umap, 2)
 plot(silhouette(modelo_kmeans_umap$cluster, matriz_dist_umap))
 ```
 
@@ -678,7 +746,9 @@ dados_umap %>%
     x = 'UMAP 1',
     y = 'UMAP 2',
     colour = 'Cluster'
-  )
+  )+
+  ggtitle("K-Médias - Matriz UMAP") +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 ## Clustering Hierárquico
 
@@ -688,14 +758,93 @@ dados_umap %>%
 
 #### Distância completa
 
-#### Distância UMAP
-
 ### Aglomerativo
+
+```{r}
+m <- c( "average", "single", "complete", "ward")
+names(m) <- c( "average", "single", "complete", "ward")
+
+# function to compute coefficient
+ac <- function(df, x) {
+  hc3 <- agnes(df, method = x)
+  pltree(hc3, cex=0.4, main='Aglomerativo - Matriz Completa') 
+  return(hc3$ac)
+}
+
+for(me in m){
+  print(ac(matriz_dist, me))
+}
+```
+
+```{r}
+hc5 <- hclust(matriz_dist, method = "ward.D2" )
+
+sub_grp <- cutree(hc5, k = 2)
+
+sub_grp
+```
+
+```{r}
+
+m = c("ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median", "centroid")
+
+for(i in m){
+  hc5 <- hclust(matriz_dist, method = i)
+  plot(hc5, cex = 0.4, main = "Aglomerativo - Distância Completa")
+  rect.hclust(hc5, k = 2, border = 2:5)
+}
+```
+
 
 ### Divisivo
 
 
+```{r}
+hc4 <- diana(matriz_dist)
+```
+
+```{r}
+plot(hc4, which.plots = 2, cex = 0.4, main="Divisivo - Matriz Completa")
+```
+
+#### Distância UMAP
+
+### Aglomerativo
+
+```{r}
+m <- c( "average", "single", "complete", "ward")
+names(m) <- c( "average", "single", "complete", "ward")
+
+# function to compute coefficient
+ac <- function(df, x) {
+  hc3 <- agnes(df, method = x)
+  pltree(hc3, cex=0.4, main='Aglomerativo - Distância UMAP') 
+  return(hc3$ac)
+}
+
+for(me in m){
+  print(ac(matriz_dist_umap, me))
+}
+```
+
+```{r}
+
+m = c("ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median", "centroid")
+
+for(i in m){
+  hc5 <- hclust(matriz_dist_umap, method = i)
+  plot(hc5, cex = 0.4)
+  rect.hclust(hc5, k = 2, border = 2:5)
+}
+```
+
+### Divisivo
 
 
+```{r}
+hc4 <- diana(matriz_dist_umap)
+```
 
- 
+```{r}
+plot(hc4)
+```
