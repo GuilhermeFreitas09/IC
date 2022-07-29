@@ -1,0 +1,437 @@
+---
+title: "Clustering com os dados completos"
+author: "Guilherme Pereira de Freitas"
+date: "27/07/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Modelagem
+
+```{r}
+library(cluster)
+library(parameters)
+library(pvclust)
+library(ggthemes)
+library(ggplot2)
+```
+
+## Matriz de distâncias
+
+### Geral
+
+```{r}
+load("../../data/matriz_dist_cenapad.rds")
+```
+
+### UMAP
+
+```{r}
+load("../../data/matriz_dist_umap_cenapad.rds")
+```
+
+```{r}
+load("../../data/reducao_umap.rds")
+```
+
+
+## PAM
+
+### Escolhendo o número de clusters
+
+#### Função Elbow
+
+```{r}
+wss_func <- function(modelo_pam, matriz_dist){
+   '
+   modelo_pam: objeto gerado a partir da função pam()
+   matriz_dist <- objeto gerado a partir da função dist()
+   '
+   n <- length(modelo_pam$medoids); wss <- 0
+   matriz_dist <- data.frame(as.matrix(matriz_dist))
+   data <- data.frame(as.matrix(modelo_pam$clustering))
+   colnames(data) <- c('cluster')
+   for (j in 1:n) {
+     center <- modelo_pam$medoids[j]
+     elemen <- rownames(dplyr::filter(data, cluster==j))
+     for (el in elemen) { 
+       wss <- wss + (matriz_dist[el,center])^2
+     }
+   }
+   return(wss)
+}
+```
+
+#### Matriz geral de distâncias
+
+```{r}
+wss_final <- c()
+for (i in 1:15) {
+  modelo_pam <- cluster::pam(matriz_dist, k=i)
+  cat("k =",i,modelo_pam$silinfo$avg.width, "\n")
+  wss_final[i] <- wss_func(modelo_pam, matriz_dist)
+  remove(modelo_pam)
+}
+```
+
+```{r}
+wss_final
+```
+
+```{r}
+plot(wss_final)
+```
+
+```{r}
+
+#seq(1:15)
+
+#png(file = "line_chart_2_lines.jpg")
+
+plot(wss_final,type = "o",col = "red", xlab = "Month", ylab = "Rain fall", main = "Gráfico de Elbow - PAM")
+
+lines(wss_final, col = "blue")
+
+#dev.off()
+```
+
+```{r}
+df <- data.frame(wss_final, seq(1:15))
+colnames(df) <- c('wss','sequ')
+```
+
+```{r}
+library(dplyr)
+```
+
+
+```{r}
+df %>% ggplot() + 
+  geom_line(aes(x=sequ, y=wss)) +
+  geom_point(aes(x=sequ, y=wss)) +
+  theme_bw() +
+  xlab("Número de clusteres") +
+  ylab("WSS") +
+  ggtitle("Gráfico de Elbow - PAM")
+```
+
+#### Matriz de distâncias UMAP
+
+```{r}
+wss_final <- c()
+for (i in 1:15) {
+  modelo_pam <- cluster::pam(matriz_dist_umap, k=i)
+  cat("k =",i,modelo_pam$silinfo$avg.width, "\n")
+  wss_final[i] <- wss_func(modelo_pam, matriz_dist_umap)
+  remove(modelo_pam)
+}
+```
+
+```{r}
+wss_final
+```
+
+```{r}
+plot(wss_final)
+```
+
+
+### Modelos
+
+```{r}
+dados_umap <- data.frame(reducao_umap$layout) 
+```
+
+#### Gráficos distância completa (usando o UMAP para printar)
+
+```{r}
+modelo_pam_completo <- cluster::pam(matriz_dist, k=2)
+```
+
+
+```{r}
+calcular_silhueta <- function(modelo, mat){
+  vec = c()
+  for(i in 1:407){
+    vec = append(vec,modelo$clustering[i][[1]])
+  }
+  sum(data.frame(silhouette(x=vec, dist = mat))$sil_width)/407
+}
+
+```
+
+
+```{r}
+calcular_silhueta(modelo_pam_completo, mat=matriz_dist)
+```
+
+
+```{r}
+# Distância completa (Muitas dimensões)
+dados_umap %>%
+  mutate(cluster = factor(modelo_pam_completo$clustering)) %>%
+  ggplot() + 
+  geom_point(aes(x=X1, y=X2, color=cluster)) +
+  theme_bw() +
+  scale_colour_colorblind() +
+  labs(
+    x = 'UMAP 1',
+    y = 'UMAP 2',
+    colour = 'Cluster'
+  ) +
+  #ggtitle("PAM - Matriz Completa") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = "none")
+```
+```{r}
+calcular_silhueta(modelo_pam_completo, mat=matriz_dist)
+```
+
+
+#### Gráficos distância UMAP
+
+```{r}
+modelo_pam_umap <- cluster::pam(matriz_dist_umap, k=2)
+```
+
+```{r}
+# Distância completa (Muitas dimensões)
+dados_umap %>%
+  mutate(cluster = factor(modelo_pam_umap$clustering)) %>%
+  ggplot() + 
+  geom_point(aes(x=X1, y=X2, color=cluster)) +
+  theme_bw() +
+  scale_colour_colorblind() +
+  labs(
+    x = 'UMAP 1',
+    y = 'UMAP 2',
+    colour = 'Cluster'
+  )+
+  #ggtitle("PAM - Matriz UMAP") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = "none")
+```
+```{r}
+calcular_silhueta(modelo_pam_umap, mat=matriz_dist_umap)
+```
+
+
+## KMEANS
+
+### Distância completa
+
+```{r}
+#Elbow Method for finding the optimal number of clusters
+set.seed(123)
+# Compute and plot wss for k = 2 to k = 15.
+k.max <- 15
+wss <- sapply(1:k.max, 
+              function(k){kmeans(matriz_dist, k)$tot.withinss})
+
+plot(1:k.max, wss,
+     type="b", pch = 19, frame = FALSE, 
+     xlab="Number of clusters K",
+     ylab="Total within-clusters sum of squares")
+```
+
+```{r}
+modelo_kmeans_completo <- kmeans(matriz_dist, 2)
+plot(silhouette(modelo_kmeans_completo$cluster, matriz_dist))
+```
+
+```{r}
+dados_umap %>%
+  mutate(cluster = factor(modelo_kmeans_completo$cluster)) %>%
+  ggplot() + 
+  geom_point(aes(x=X1, y=X2, color=cluster)) +
+  theme_bw() +
+  scale_colour_colorblind() +
+  labs(
+    x = 'UMAP 1',
+    y = 'UMAP 2',
+    colour = 'Cluster'
+  )+
+  #ggtitle("K-Médias - Matriz Completa") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = "none")
+```
+
+
+### Distãncia UMAP
+
+```{r}
+#Elbow Method for finding the optimal number of clusters
+set.seed(123)
+# Compute and plot wss for k = 2 to k = 15.
+k.max <- 15
+wss <- sapply(1:k.max, 
+              function(k){kmeans(matriz_dist_umap, k)$tot.withinss})
+
+plot(1:k.max, wss,
+     type="b", pch = 19, frame = FALSE, 
+     xlab="Number of clusters K",
+     ylab="Total within-clusters sum of squares")
+```
+
+```{r}
+modelo_kmeans_umap <- kmeans(matriz_dist_umap, 2)
+plot(silhouette(modelo_kmeans_umap$cluster, matriz_dist_umap))
+```
+
+```{r}
+dados_umap %>%
+  mutate(cluster = factor(modelo_kmeans_umap$cluster)) %>%
+  ggplot() + 
+  geom_point(aes(x=X1, y=X2, color=cluster)) +
+  theme_bw() +
+  scale_colour_colorblind() +
+  labs(
+    x = 'UMAP 1',
+    y = 'UMAP 2',
+    colour = 'Cluster'
+  )+
+  #ggtitle("K-Médias - Matriz UMAP") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = "none")
+```
+## Clustering Hierárquico
+
+<!-- Para cada método, gerar 3 modelos (um para cada um dos tipos de ligamento escolhidos-->
+
+### Encontrando o número de clutereres para o hierárquico
+
+#### Distância completa
+
+### Aglomerativo
+
+```{r}
+hc3 <- agnes(matriz_dist, method = 'ward')
+```
+
+```{r}
+
+```
+```{r}
+sum(data.frame(silhouette(x=cutree(hc3, k = 2), dist = matriz_dist))$sil_width)/407
+```
+
+
+
+```{r}
+m <- c( "average", "single", "complete", "ward")
+names(m) <- c( "average", "single", "complete", "ward")
+
+# function to compute coefficient
+ac <- function(df, x) {
+  hc3 <- agnes(df, method = x)
+  sil = sum(data.frame(silhouette(x=cutree(hc3, k = 2), dist = matriz_dist))$sil_width)/407
+  pltree(hc3, cex=0.4, main=paste('Aglomerativo - Matriz Completa - sil =', sil))
+  return(hc3$ac)
+}
+
+for(me in m){
+  print(ac(matriz_dist, me))
+}
+```
+
+```{r}
+hc5 <- hclust(matriz_dist, method = "ward.D2" )
+
+sub_grp <- cutree(hc5, k = 2)
+
+sub_grp
+```
+
+```{r}
+
+m = c("ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median", "centroid")
+
+for(i in m){
+  hc5 <- hclust(matriz_dist, method = i)
+  plot(hc5, cex = 0.4, main = "Aglomerativo - Distância Completa")
+  rect.hclust(hc5, k = 2, border = 2:5)
+}
+```
+
+
+### Divisivo
+
+
+```{r}
+hc4 <- diana(matriz_dist)
+```
+
+```{r}
+sil = sum(data.frame(silhouette(x=cutree(hc3, k = 2), dist = matriz_dist))$sil_width)/407
+plot(hc4, which.plots = 2, cex = 0.4, main=paste("Divisivo - Matriz Completa", sil))
+```
+
+#### Distância UMAP
+
+### Aglomerativo
+
+```{r}
+m <- c( "average", "single", "complete", "ward")
+names(m) <- c( "average", "single", "complete", "ward")
+
+# function to compute coefficient
+ac <- function(df, x) {
+  hc3 <- agnes(df, method = x)
+  sil = sum(data.frame(silhouette(x=cutree(hc3, k = 2), dist = matriz_dist_umap))$sil_width)/407
+  pltree(hc3, cex=0.4, main=paste(x, '- aglomerativo - Distância UMAP', sil)) 
+  return(hc3$ac)
+}
+
+for(me in m){
+  print(ac(matriz_dist_umap, me))
+}
+```
+
+```{r}
+
+m = c("ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median", "centroid")
+
+for(i in m){
+  hc5 <- hclust(matriz_dist_umap, method = i)
+  plot(hc5, cex = 0.4)
+  rect.hclust(hc5, k = 2, border = 2:5)
+  print(sum(data.frame(silhouette(x=cutree(hc5, k = 2), dist = matriz_dist_umap))$sil_width)/407)
+}
+```
+
+### Divisivo
+
+
+```{r}
+hc4 <- diana(matriz_dist_umap)
+```
+
+```{r}
+sil = sum(data.frame(silhouette(x=cutree(hc4, k = 2), dist = matriz_dist_umap))$sil_width)/407
+plot(hc4, which.plots = 2, cex = 0.4, main=paste("Divisivo - Matriz Completa", sil))
+```
+
+# GMM
+
+```{r}
+summary(reducao_umap)
+```
+
+```{r}
+mclustBIC(reducao_umap$layout)
+```
+
+
+```{r}
+modelo_bic = Mclust(reducao_umap$layout, 2, modelNames = "EVV")
+```
+
+```{r}
+plot(modelo_bic, what = "classification", xlab='UMAP 1', ylab='UMAP 2')
+```
+```{r}
+modelo_bic = Mclust(reducao_umap$layout, 2, modelNames = "EII")
+```
+
+```{r}
+plot(modelo_bic, what = "classification", xlab='UMAP 1', ylab='UMAP 2')
+```

@@ -378,7 +378,7 @@ head(bVals[,1:5])
 
 
 
-# Modelagem
+# Modelagem com a amostra
 
 ```{r}
 if(!require(devtools)) install.packages("devtools")
@@ -848,5 +848,3 @@ hc4 <- diana(matriz_dist_umap)
 ```{r}
 plot(hc4)
 ```
-
- 
