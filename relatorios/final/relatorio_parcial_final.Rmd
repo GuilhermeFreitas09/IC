@@ -177,7 +177,7 @@ $$
 
 onde $n$ é o número total de CpGs e X e Y são os vetores de betas de dois indivíduos. Cada um dos métodos foi aplicado na matriz de distâncias completa e em duas compontentes obtidas através do método Uniform Manifold Approximation and Projection (UMAP) [@mcinnes2020umap].
 
-Para escolher o número de grupos, em cada um dos métodos, utilizaremos as técnicas de Silhueta e Gráfico de Elbow.
+Para avaliar o número de grupos, utilizou-se as técnicas de Silhueta, Gráfico de Elbow e BIC.
 
 - Silhueta: Dado um conjunto de clusteres $\Lambda$, temos que a silhueta da observação i presente no cluster $\lambda_k$ é dada por $s_{i\lambda_k} = \frac{b_i - a_i}{max(b_i, a_i)}$, onde $a_i$ é a dissimilaridade de i com relação aos elementos do cluster $\lambda_k$ (que o contém) e $b_i$ é a menor dissimilaridade de i com relação aos elementos de outro cluster $\lambda$, ou seja, $b_i = min_{\lambda \neq \lambda_k}d(i,\lambda)$ [@silhueta].
 
@@ -185,7 +185,7 @@ Para escolher o número de grupos, em cada um dos métodos, utilizaremos as téc
 - Método de Elbow: O Método de Elbow [@hayasaka_2022] é uma curva construída a partir da Soma de Quadrados Intra-cluster, ou inércia, cuja fórmula é dada por $WSS = \sum_{k=1}^{K}\sum_{i\in S_{k}}\sum_{j=1}^{p} (x_{ij}-\bar{x}_{kj})^{2}$ [@hinduja_2015]. O melhor número de clusteres é obtido no ponto de maior inclinação da curva.
 
 
-- Critérios de Informação: 
+- Critérios de Informação: Para avaliar o número de grupos no método de mistura de modelos, utilizou-se o Critério de Informação Bayesiana (BIC) [@Vrieze2012-ox].
 
 
 ## K-Médias
@@ -213,18 +213,40 @@ O medoid j, por exemplo, é dado por $c_j \in (x_1,x_2,...,x_{n-1},x_n)$, onde $
 
 Os métodos de clustering hierárquico funcionam de tal forma que, dado um cojunto de g clusters, ao obtermos outro cojunto de g+1 a partir do inicial temos que ambos conjuntos de clusters apresentam g-1 grupos idênticos, e o grupo remanecente é dividido em dois. Existem diversas técnicas dessa família; as mais famosas são a de Single-Linkage, que considera a distância entre dois grupos como sendo a distância entre seus pontos mais próximos, e a Complete-Linkage, que considera a distância entre dois grupos como sendo a distância entre seus dois pontos mais distantes. Ambas as técnicas apresentam diferentes versões de agrupamentos, como a aglomerativa e a divisa [@Mardia1979].
 
-## Mistura de Modelos Gaussianos
+## Modelos de Misturas Gaussianas
 
+Misturas finitas de modelos [@Scrucca2016-sm] estão cada vez mais sendo utilizadas em diversos campos de pesquisa, como análise de agrumaneto, classificação e estimação de densidades. O método nos diz que, dado um número $G$ de variáveis aleatórias com distribuição $f_k(\textbf{x})_i$, tal que $i=1,2,3,..,G$ e $\mathbf{x}$$=${$x_1, x_2,...,x_n$} é uma amostra iid, podemos escrever a distribuição de cada uma das observações por uma função de densidade de probabilidade através de uma mistura finita de modelos de G componentes da seguinte forma
 
+$$
+f(\mathbf{x}_i;\mathbf{\Psi}) = \sum_{k=1}^{G}\pi_k f_{k}(\mathbf{x}_i;\mathbf{\theta}_k)
+$$
+
+onde $\mathbf{\Psi}$ $=$ {$\pi_1,...,\pi_{G-1}, \mathbf{\theta}_1,...,\mathbf{\theta}_G$} são os parâmetros do modelo de misturas, $f_{k}(\mathbf{x}_i;\mathbf{\theta}_k)$ é a k-ésima componente de densidade para a observação $i$ com parâmetro $\mathbf{\theta}_k$, ($\pi_1,...,\pi_{G-1}$) são os pesos ou probabilidades ($\pi_k>0$, $\sum_{k=1}^{G}\pi_k=1$) e $G$ é o número de componentes da mistura.
+
+Assumindo que G é fixado, os parâmetros $\mathbf{\Psi}$ da mistura de modelos são, geralmente, desconhecidos e precisam ser estimados. A função do log da verossimilhança é dada por 
+
+$$
+\mathcal{L}(\mathbf{\Psi}; \mathbf{x}_1,...,\mathbf{x}_n)=\sum_{i=1}^{n}log(f(\mathbf{x}_i;\mathbf{\Psi}))=\sum_{i=1}^{n}log(\sum_{k=1}^{G}\pi_k f_{k}(\mathbf{x}_i;\mathbf{\theta}_k)).
+$$
+A maximização direta da verossimilhança é muito complicada devido ao logaritmo da soma. Para contornar esse problema, utiliza-se o algoritmo \textit{Expextation - Maximization}, ou simplesmente EM.
+
+No presente trabalho, utilizou-se um modelo popuar denominado Gaussian Mixture Model (GMM), que assume uma distribuição gaussiana multivariada para cada componente, isto é, $f_k(\mathbf{x};\mathbf{\theta}_k) \sim \mathcal{N}(\mathbf{\mu}_k, \mathbf{\Sigma}_k)$. Os agrupamentos formados são elipsoidais, centrados no vetor de médias $\mathbf{\mu}_k$, com propriedades geométricas definidas pela matriz de covariâncias $\mathbf{\Sigma}_k$. O pacote mclust, utilizado na pesquisa, inicia o algoritmo aplicando-se um clustering hierárquico, para obter $\Psi_o$, e então atualiza sequencialmente as densidades buscando-se maximizar a função $\mathcal{L}(\mathbf{\Psi}; \mathbf{x}_1,...,\mathbf{x}_n)$.
 
 ## Redução de Dimensões
-	
-\newpage
 
+aa
 
-aaaaaaaaaa
-aaaaa
 aaa
+
+aa
+
+a
+
+a
+
+a
+
+a
 
 \newpage
 
