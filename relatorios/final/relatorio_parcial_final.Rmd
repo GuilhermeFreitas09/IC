@@ -47,7 +47,6 @@ Os primeiros conceitos de genética surgiram em meados do século XIX, através 
 
 No entanto, a palavra "genética" foi introduzida somente em 1906, numa carta redigida pelo biólogo britânico Willian Bateson (1861-1926), com o objetivo de designar uma nova ciência de variação e hereditariedade. Baseada nos métodos probabilísticos de Mendel, essa nova era ciência era distinguida pelo seu propósito explícito de generalizar a heredirariedade. Em 1910, a genética Mendeliana fundiu-se com a Teoria Cromossômica de Herança, dando início à conhecida Genética Clássica, que se dissolveria algumas décadas depois com a descoberta do DNA como base da herança genética. Esse último evento abriu as portas para a famosa Biologia Molecular, ciência moderna que utilizamos nos dias de hoje. [@Gayon-2016]
 
-## Biologia Molecular e Mecanismos Genéticos
 
 ## Células
 
