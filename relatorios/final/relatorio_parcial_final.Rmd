@@ -68,9 +68,9 @@ Todas as células possuem características básicas. Elas são elvolvidas pela m
 
 ## DNA
 
-O DNA (Ácido Desoxirribonucleico) é a principal molécula portadora de informações dentro de uma célula, e sua estrutura se dá pela famosa dupla-hélice. Uma molécula de DNA de fita única, também chamada de polinucleotídeo, é uma cadeia de pequenas moléculas denominadas nucleotídeos. É comum utilizar o termo "base nitrogenada" para se referenciar a um nucleotídeo. 
+O DNA (Ácido Desoxirribonucleico) é a principal molécula portadora de informações dentro de uma célula, e sua estrutura se dá pela famosa dupla-hélice. Uma molécula de DNA de fita única, também chamada de polinucleotídeo, é uma cadeia de pequenas moléculas denominadas nucleotídeos. Cada nucleotídeo é formado a partir da combinação de três componentes; um açúcar de 5 carbonos, um grupo fosfato e uma base nitrogenada.
 
-Existem 4 diferentes nucleotídeos, que estão distribuídas em dois grupos; as purinas e as piridiminas. As purinas são as guaninas e adeninas, representadas respectivamente pelas letras G e A. O grupo das piridiminas é formato pelas citosinas e timinas, representadas respectivamente pelas letras C e T. Os polinucleotídeos podem ser formados por qualquer sequência de bases e podem assumir tamanhos diversos. Além disso, em uma dupla hélice, as duas fitas de polinucleotídeos se ligam através da seguinte forma: C liga com G e A liga com T.
+Existem quatro bases nitrogenadas no DNA, que estão distribuídas em dois grupos; as purinas e as piridiminas. As purinas são as guaninas e adeninas, representadas respectivamente pelas letras G e A. O grupo das piridiminas é formato pelas citosinas e timinas, representadas respectivamente pelas letras C e T. Os polinucleotídeos podem ser formados por qualquer sequência de bases e podem assumir tamanhos diversos. Além disso, em uma dupla hélice, as duas fitas de polinucleotídeos se ligam através da seguinte forma: C liga com G e A liga com T.
 
 O fim de um polinucleotídeo é marcado por 5' ou 3'. Por convensão, uma fita de DNA é escrita com 5' no polo esquerdo e 3' no polo direito, de tal forma que dois polinucleotídeos são complementares se um pode ser obtido pelo outro através da troca mutual de A por T e C por G.
 [@Brazma-2001]
@@ -108,7 +108,7 @@ knitr::include_graphics("../../imagens/citosina_metilada.png")
 
 Microarranjos de DNA são arranjos de estruturas fixas de ácido nucleico, chamadas de sondas, cujos padrões foram definidos durante a construção ou depositados em um substrato sólido e plano, geralmente de vidro ou silício. Essas plataformas são utilizadas para investigar a quantidade de mRNA, ou genes expressos, presente na amostra biológica sob o experimento (experimento de hibridização). Atualmente, existe uma tendência em usar o sequênciamento de genes com o objetivo de desenvolver sondas e possibilitar a fabricação de microarranjos [@scherer-2009].
 
-# Banco de dados
+# Banco de Dados
 
 O banco de dados utilizado foi retirado do estudo de associação epigenômica ampla (EWS - \textit{epigenome-wide association study}) de COVID-19 realizado por [@CastrodeMoura2021]. Os dados estão disponíveis no repositório público \textit{The Gene Expression Omnibus} (GEO), sob código de acesso GSE168739. Trata-se de 407 pacientes de COVID-19 sem comorbidades, com idade máxima de 61 anos. Os dados foram coletados através da plataforma \textit{Infinium MethylationEPIC BeadChip}, totalizando em 850 mil ilhas CpGs para cada indivíduo.
 
@@ -174,7 +174,7 @@ $$
 D(X,Y) = \sqrt{\sum_{i}^{n}(x_i - y_i)^2},
 $$
 
-onde $n$ é o número total de CpGs e X e Y são os vetores de betas de dois indivíduos. Cada um dos métodos foi aplicado na matriz de distâncias completa e em duas compontentes obtidas através do método Uniform Manifold Approximation and Projection (UMAP) [@mcinnes2020umap].
+onde $n$ é o número total de CpGs e X e Y são os vetores de betas de dois indivíduos. Cada um dos métodos foi aplicado na matriz de distâncias completa e em duas compontentes obtidas através do método Uniform Manifold Approximation and Projection (UMAP).
 
 Para avaliar o número de grupos, utilizou-se as técnicas de Silhueta, Gráfico de Elbow e BIC.
 
@@ -233,19 +233,7 @@ No presente trabalho, utilizou-se um modelo popuar denominado Gaussian Mixture M
 
 ## Redução de Dimensões
 
-aa
-
-aaa
-
-aa
-
-a
-
-a
-
-a
-
-a
+As técnicas de redução de dimensão estão sendo aplicadas em um variedade de campos e em tamanhos cada vez maiores de conjuntos de dados. UMAP (Uniform Manifold Approximation and Projection)  [@mcinnes2020umap] é uma técnica de aprendizado múltiplo para redução de dimensões. UMAP foi construído a partir de um framework baseado na geometria de Riemannian e na topologia algébrica, e fornece um algoritmo escalável e aplicável em dados do mundo real. Além disso, essa técnica é uma alternativa ao t-SNE, fornecendo mais qualidade de visualização, mantendo mais da estrutura global e sendo mais eficiente no tempo de execução.
 
 \newpage
 
