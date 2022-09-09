@@ -28,7 +28,7 @@ knitr::opts_chunk$set(echo = FALSE, fig.pos = "H")
 
 # Resumo
 
-O presente trabalho tem como objetivo explorar as principais técnicas de pré-processamento de dados de metilação de DNA, bem como aplicar métodos de Aprendizado de Máquina não Supervisionado em dados de metilação de pacientes de Covid-19. Além disso, passaremos por algumas técnicas computacionais que nos ajudarão a cumprir com o objetivo, como o gráfico de Elbow junto a Silhueta, para definir o melhor número de clusters.
+O presente trabalho tem como objetivo explorar as principais técnicas de pré-processamento de dados de metilação de DNA, bem como aplicar métodos de Aprendizado de Máquina não Supervisionado em dados de metilação de pacientes de Covid-19. Cada um dos pacientes apresentava, na época da pesquisa, sintomas leves ou severos da doença. Dessa forma, o objetivo da pesquisa é verficar se o grau da comorbidade afeta a metilação do DNA dos pacientes, separando-os em dois grandes grupos. Além disso, passaremos por algumas técnicas computacionais que nos ajudarão a cumprir com o objetivo, como o gráfico de Elbow junto a Silhueta, para definir o melhor número de clusters.
 
 \textbf{Palavras-chave:} bioinformática, metilação de DNA, aprendizado de máquina não supervisionado, métodos de agrupamento, COVID-19, EWAS
 
@@ -37,15 +37,13 @@ O presente trabalho tem como objetivo explorar as principais técnicas de pré-p
 
 Estudos recentes vêm demonstrando a importância da metilação de DNA, um marcador epigenético importante, na regulação da expressão gênica. Métodos de agrupamento ou de aprendizado de máquina não-supervisionado são utilizados para extrair informações para diagnóstico precoce e tratamentos a partir de dados de alta dimensão dos estudos epigênicos. Neste projeto, iremos aplicar métodos de agrupamento em dados de metilação de DNA de 407 pacientes de COVID-19, onde 194 (47.7\%) desses foram diagnosticados com sintomas leves e 213 (52.3\%) com sintomas severos, com o objetivo de encontrar grupos que podem ter sido formados por influência dessa doença.
 
-Embora todas as células de um organismo apresentem, essencialmente, o mesmo conteúdo genético, suas funções e particularidades se dão por meio do regulamento da expressão gênica. Tal regulamento ocorre por meio de mecanismos epigenéticos, como a metilação do DNA, modificação de histonas e outros processos mediados por RNA, que influenciam principalmente a expressão gênica a nível de transcrição [@Gibney2010].
-
 O mecanismo estudado é a metilação da citosina (5mC), que ocorre em áreas específicas de regulação, como regiões promotoras ou de heterocromatina. Esse fenômeno pode modificar, significativamente, a expressão temporal e espacial dos genes e a remodelação da cromatina [@Heyn2012]. Em mamíferos, as citosinas metiladas estão restritas às CpGs (citosina-fosfato-guanina), onde as mesmas antecedem uma guanina (G) na direção de 5'. Vale lembrar que quatro bases nitrogenadas compõem a formação do DNA, portanto existem 16 possibilidades para se formar um par em sequência, o que ajuda a identificar as ilhas CpGs, pois estas apresentam uma frequência maior desse par (CG) quando comparadas a outras regiões arbitrárias [@Gibney2010]. 
 
 # Conceitos de Genética
 
 Os primeiros conceitos de genética surgiram em meados do século XIX, através dos famosos experimentos com ervilhas conduzidos por Gregor Johann Mendel (1822 - 1884). Através de análises qualitativas e quantitativas em dados coletados durante uma década, Mendel foi capaz de mostrar que os indivíduos herdavam as características de seus pais de modo previsível, além de concluir que cada particularidade de uma ervilha é controlada por um par de fatores que segrega-se na formação dos gametas. [@klug-2019]
 
-No entanto, a palavra "genética" foi introduzida somente em 1906, numa carta redigida pelo biólogo britânico Willian Bateson (1861-1926), com o objetivo de designar uma nova ciência de variação e hereditariedade. Baseada nos métodos probabilísticos de Mendel, essa nova era ciência era distinguida pelo seu propósito explícito de generalizar a heredirariedade. Em 1910, a genética Mendeliana fundiu-se com a Teoria Cromossômica de Herança, dando início à conhecida Genética Clássica, que se dissolveria algumas décadas depois com a descoberta do DNA como base da herança genética. Esse último evento abriu as portas para a famosa Biologia Molecular, ciência moderna que utilizamos nos dias de hoje. [@Gayon-2016]
+A palavra "genética" foi introduzida somente em 1906, numa carta redigida pelo biólogo britânico Willian Bateson (1861-1926), com o objetivo de designar uma nova ciência de variação e hereditariedade. Baseada nos métodos probabilísticos de Mendel, essa nova ciência era distinguida pelo seu propósito explícito de generalizar a heredirariedade. Em 1910, a genética Mendeliana fundiu-se com a Teoria Cromossômica de Herança, dando início à conhecida Genética Clássica, que se dissolveria algumas décadas depois com a descoberta do DNA como base da herança genética. Esse último evento abriu as portas para a famosa Biologia Molecular, ciência moderna que utilizamos nos dias de hoje. [@Gayon-2016]
 
 
 ## Células
@@ -64,39 +62,39 @@ Uma célula é formada por um conjunto de organelas que desempenham funções vi
 knitr::include_graphics("../../imagens/estrutura_celular_2.png")
 ```
 
-Todas as células possuem características básicas. Elas são elvolvidas pela membrana plasmática e apresentam uma substância gelatinosa, denominada citosol, que suspende os componentes celulares. No entanto, a maior diferença entre uma célula procariota e eucariota se dá na localização de seu DNA, pois em uma célula eucarionte, a maior parte do conteúdo genético está presente no núcleo, protegido por uma membrana, enquanto que na procarionte, não temos um núcleo real ou uma membrana com a função de proteção. [@reece-2020]
+Todas as células possuem características básicas. Elas são elvolvidas pela membrana plasmática e apresentam uma substância gelatinosa, denominada citosol, que suspende os componentes celulares. No entanto, a maior diferença entre uma célula procariota e eucariota se dá na localização de seu DNA, pois em uma célula eucarionte, a maior parte do conteúdo genético está presente no núcleo, protegido por uma membrana, enquanto que na procarionte, não temos um núcleo real ou uma membrana desempenhando a função de proteção. [@reece-2020]
 
 ## DNA
 
 O DNA (Ácido Desoxirribonucleico) é a principal molécula portadora de informações dentro de uma célula, e sua estrutura se dá pela famosa dupla-hélice. Uma molécula de DNA de fita única, também chamada de polinucleotídeo, é uma cadeia de pequenas moléculas denominadas nucleotídeos. Cada nucleotídeo é formado a partir da combinação de três componentes; um açúcar de 5 carbonos (desoxirribose), um grupo fosfato e uma base nitrogenada.
 
-Existem quatro bases nitrogenadas no DNA, que estão distribuídas em dois grupos; as purinas e as piridiminas. As purinas são as guaninas e adeninas, representadas respectivamente pelas letras G e A. O grupo das piridiminas é formato pelas citosinas e timinas, representadas respectivamente pelas letras C e T. Os polinucleotídeos podem ser formados por qualquer sequência de bases e podem assumir tamanhos diversos. Além disso, em uma dupla-hélice, as duas fitas de polinucleotídeos se ligam através da seguinte forma: C liga com G e A liga com T.
+Existem quatro bases nitrogenadas no DNA, que estão distribuídas em dois grupos; as purinas e as piridiminas. As purinas são as guaninas e adeninas, representadas respectivamente pelas letras G e A. O grupo das piridiminas é formado pelas citosinas e timinas, representadas respectivamente pelas letras C e T. Os polinucleotídeos podem ser formados por qualquer sequência de bases. Além disso, em uma dupla-hélice, as duas fitas de polinucleotídeos se ligam através da seguinte forma: C liga com G e A liga com T.
 
 O fim de um polinucleotídeo é marcado por 5' ou 3'. Por convensão, uma fita de DNA é escrita com 5' no polo esquerdo e 3' no polo direito, de tal forma que dois polinucleotídeos são complementares se um pode ser obtido pelo outro através da troca mutual de A por T e C por G.
 [@Brazma-2001]
 
 ## RNA
 
-Assim como o DNA, uma molécula de RNA (Ácido Ribonucleico) é formada por cadeias de nucleotídeos, mas utiliza a uracila (U) no lugar da timina (T) e o açúcar que a forma é a ribose. Essa diferença faz com que a mesma seja formada por um único polinucleotídeo, que leva a necessidade de uma estrutura mais complexa para realizar as ligações entre as bases. [@Brazma-2001]
+Assim como o DNA, uma molécula de RNA (Ácido Ribonucleico) é formada por cadeias de nucleotídeos, mas utiliza a uracila (U) no lugar da timina (T) e o açúcar que a forma é a ribose. Essa diferença faz com que a mesma seja composta por um único polinucleotídeo, que leva a necessidade de uma estrutura mais complexa para realizar as ligações entre as bases. [@Brazma-2001]
 
-Existem diferentes moléculas de RNA, que desempenham funções importantes para a síntese de proteínas dentro de uma célula. Esse processo pode ser majoritariamente dividido em duas etapas; transcrição e tradução. De forma resumida, uma enzima, denominada RNA polimerase, inicia o processo de transcrição após reconhecer uma zona de interesse (o início de um gene, por exemplo). Após essa etapa, ela divide temporiariamente a dupla-hélice do DNA em dois polinucleotídeos e transcreve a sequência de um deles em uma molécula de RNA, que será copiada em um RNA mensageiro (mRNA). [@MartinTompa-2003]
+Existem diferentes moléculas de RNA, que desempenham funções importantes para a síntese de proteínas dentro de uma célula. Esse processo pode ser majoritariamente dividido em duas etapas; transcrição e tradução. De forma resumida, uma enzima, denominada RNA polimerase, inicia o processo de transcrição após reconhecer uma zona de interesse (o início de um gene, por exemplo). Após essa etapa, ela divide temporiariamente a dupla-hélice do DNA em dois polinucleotídeos e transcreve a sequência de um deles em uma molécula de RNA, que por sua vez é copiada em um RNA mensageiro (mRNA). [@MartinTompa-2003]
 
-Então, o mRNA se liga a um ribossomo e encontra o RNA transportador (tRNA), que por sua vez reconhece as informações contidas no mRNA e carrega os aminoácidos apropriados para a construção de proteínas durante a tradução. [@klug-2019]
+Então, o mRNA se liga a um ribossomo e encontra o RNA transportador (tRNA), que reconhece as informações contidas no mRNA e carrega os aminoácidos apropriados para a construção de proteínas durante a tradução. [@klug-2019]
 
 ## Cromossomos e genes
 
 A vida depende da capacidade das células de guardar, recuperar e traduzir as instruções genéticas para gerar e manter um organismo vivo [@alberts-2002]. Essas instruções são carregadas por moléculas de DNA, que por sua vez formam as estruturas complexas denonimadas cromossomos. Nos cromossomos, o DNA se apresenta enrolado em proteínas chamadas de histonas, de tal forma que se fosse esticado alcançaria 1m de comprimento. Além disso, dentro de um organismo multicelular, todas as células carregam o mesmo conteúdo genético, com algumas poucas excessões, devido ao resultado da replicação de DNA em cada divisão celular. [@Brazma-2001]
 
-Existem várias definições do significado de um "gene". [@Brazma-2001] aponta que um gene é um trecho contínuo de uma molécula de DNA, a partir do qual um complexo maquinário molecular pode ler informações (codificadas com as letras A, T, G e C) e fazer um tipo específico ou um conjunto de proteínas. Os genes são fundamentais em vários processos biomoleculares, como na síntese protéica, onde RNA polimerase identifica a sequência de bases de um gene específico e inicia o processo de produção das proteínas requisitadas.
-
 Todos os seres humanos apresentam 23 pares de cromossomos, e a diferenciabilidade entre as suas células, como em qualquer organismo multicelular, ocorre através da regulação da expressão gênica, que pode silenciar determinados genes para obter tipos específicos de células (como a da pele, por exemplo).
+
+Existem várias definições do significado de um "gene". [@Brazma-2001] aponta que um gene é um trecho contínuo de uma molécula de DNA, a partir do qual um complexo maquinário molecular pode ler informações (codificadas com as letras A, T, G e C) e fazer um tipo específico ou um conjunto de proteínas. Os genes são fundamentais em vários processos biomoleculares, como na síntese protéica, onde RNA polimerase identifica a sequência de bases de um gene específico e inicia o processo de produção das proteínas requisitadas.
 
 
 # Epigenética e Expressão Gênica
 
-Embora todas as células de um organismo multicelular apresentem o mesmo conteúdo genético, suas funções e particularidades ocorrem a partir do regulamento da expressão gênica. Tal regulamento ocorre por meio de mecanismos epigenéticos, como a metilação do DNA, modificação de histonas e outros processos mediados por RNA, que influenciam principalmente a expressão gênica a nível de transcrição. [@Gibney2010]
+Embora todas as células de um organismo apresentem, essencialmente, o mesmo conteúdo genético, suas funções e particularidades se dão por meio do regulamento da expressão gênica. Tal regulamento ocorre por meio de mecanismos epigenéticos, como a metilação do DNA, modificação de histonas e outros processos mediados por RNA, que influenciam principalmente a expressão gênica a nível de transcrição [@Gibney2010].
 
-O mecanismo estudado será a metilação da citosina (5mC), que acontece em áreas específicas de regulação, como regiões promotoras ou de heterocromatina. Esse fenômeno pode modificar, significativamente, a expressão temporal e espacial dos genes e a remodelação da cromatina [@Illumina-2017]. Em mamíferos, as citosinas metiladas estão restritas às CpGs, onde elas antecedem uma guanina (G) na direção de 5'. Vale lembrar que o DNA é formado por 4 nucleotídeos e portanto existem 16 possibilidades para se formar um par em sequência, o que ajuda a identificar as ilhas CpGs, pois estas apresentam uma frequência maior desse par quando comparadas com outras regiões arbitrárias [@Gibney2010]. A figura \ref{fig:metilacao} retrata a adição do grupo metil $CH_3$ à estrutura química de uma citosina [@Saini-2013].
+O mecanismo estudado é a metilação da citosina (5mC), que ocorre em áreas específicas de regulação, como regiões promotoras ou de heterocromatina. Esse fenômeno pode modificar, significativamente, a expressão temporal e espacial dos genes e a remodelação da cromatina [@Illumina-2017]. Em mamíferos, as citosinas metiladas estão restritas às CpGs, onde elas antecedem uma guanina (G) na direção de 5'. Vale lembrar que o DNA é formado por 4 nucleotídeos e portanto existem 16 possibilidades para se formar um par em sequência, o que ajuda a identificar as ilhas CpGs, pois estas apresentam uma frequência maior desse par quando comparadas com outras regiões arbitrárias [@Gibney2010]. A figura \ref{fig:metilacao2} retrata a adição do grupo metil $CH_3$ à estrutura química de uma citosina [@Saini-2013].
 
 
 ```{r metilacao2, fig.cap="Metilação da citosina para 5-metilcitosina, que impede sua transcrição para uracila", out.width = '50%', out.height='25%', fig.align="center"}
@@ -110,11 +108,11 @@ Microarranjos de DNA são arranjos de estruturas fixas de ácido nucleico, chama
 
 # Banco de Dados
 
-O banco de dados utilizado foi retirado do estudo de associação epigenômica ampla (EWS - \textit{epigenome-wide association study}) de COVID-19 realizado por [@CastrodeMoura2021]. Os dados estão disponíveis no repositório público \textit{The Gene Expression Omnibus} (GEO), sob código de acesso GSE168739. Trata-se de 407 pacientes de COVID-19 sem comorbidades, com idade máxima de 61 anos. Os dados foram coletados através da plataforma \textit{Infinium MethylationEPIC BeadChip}, totalizando em 850 mil ilhas CpGs para cada indivíduo.
+O banco de dados utilizado foi retirado do estudo de associação epigenômica ampla (EWS - \textit{epigenome-wide association study}) de COVID-19 realizado por [@CastrodeMoura2021]. Os dados estão disponíveis no repositório público \textit{The Gene Expression Omnibus} (GEO), sob código de acesso GSE168739. Trata-se de 407 pacientes de COVID-19 sem comorbidades, com idade máxima de 61 anos, onde 194 (47.7\%) foram diagnosticados com sintomas leves e 213 (52.3\%) com sintomas severos. Os dados foram coletados através da plataforma \textit{Infinium MethylationEPIC BeadChip}, totalizando em 850 mil ilhas CpGs para cada indivíduo.
 
 ## Infinium MethylationEPIC BeadChip
 
-O Infinium MethylationEPIC BeadChip é o novo chip da Illumina, sucessor do Illumina HumanMethylation450 (HM450) BeadChip, que cobria aproximadamente 450.000 CpGs. O novo chip cobre mais de 90% das CpGs de HM450 e um adicional de 413.743, somando mais de 850 mil ilhas. Isso é possível devido ao uso das sondas Infinium II, que necessita apenas de 2 sondas (beads) por Locus. Além disso, das 413.743 CpGs adicionais, 95% utilizam as novas sondas. A alta proporção de sondas do tipo II ocupa menos espaço, maximizando sua quantidade, porém reduz o número de amostras mensuradas pelo chip de 12 (HM450) para 8 (EPIC) [@Pidsley-2016].
+O Infinium MethylationEPIC BeadChip é o novo chip da Illumina, sucessor do Illumina HumanMethylation450 (HM450) BeadChip, que cobria aproximadamente 450.000 CpGs. Esse dispositivo cobre cerca de 90% das CpGs de HM450 e um adicional de 413.743, somando mais de 850 mil ilhas. Isso é possível devido ao uso das sondas Infinium II, que necessita apenas de uma sonda por sítio. Além disso, das 413.743 CpGs adicionais, 95% utilizam as novas sondas. A alta proporção de sondas do tipo II ocupa menos espaço, maximizando sua quantidade, porém reduz o número de amostras mensuradas pelo chip de 12 (HM450) para 8 (EPIC) [@Pidsley-2016].
 
 
 ```{r beadchip, fig.cap="O Infinium MethylationEPIC BeadChip apresenta > 850.000 CpGs em regiões potenciadoras, corpos gênicos, promotores e ilhas CpG. (Illumina 2015)", out.width = '100%', out.height='30%', fig.align="center"}
@@ -122,13 +120,13 @@ knitr::include_graphics("../../imagens/Infinium_MethylationEPIC_BeadChip_2.jpg")
 ```
 
 
-Para cada ilha CpG, o chipe registra suas intensidades de metilado e não metilado, de modo que os níveis de metilação são obtidos através da fórmula $\beta = \frac{M}{M+U}$, tal que M é a intensidade de metilado e U é a intensidade de não metilado. Outra técnica muito utilizada para medir o nível de metilação é dada por $M value = log2(\frac{M}{U})$. É muito comum somar um $\alpha$ ao denominador de $\beta$, para evitar cenários de divisão por zero quando $M + U \longrightarrow 0$ e arrumar a escala dos coeficientes [@Maksimovic2016]. 
+Para cada sítio CpG, o chip registra suas intensidades de metilado e não metilado, de modo que os níveis de metilação são obtidos através da fórmula $\beta = \frac{M}{M+U}$, tal que M é a intensidade de metilado e U é a intensidade de não metilado. Outra métrica muito utilizada para medir o nível de metilação é dada por $M value = log2(\frac{M}{U})$. É muito comum somar um $\alpha$ ao denominador de $\beta$, para evitar cenários de divisão por zero quando $M + U \longrightarrow 0$ e arrumar a escala dos coeficientes [@Maksimovic2016]. 
 
 \newpage
 
 # Pré-processamento
 
-O fluxo de pré-processamento será feito seguindo o passo a passo descrito no artigo "A cross-package Biodonductor workflow for analysing methylation array data" [@Maksimovic2016], por meio das ferramentas dispostas no pacote Bioconductor [@bioconductor], disponíveis para a linguagem R [@R]. Os agoritmos são aplicados na matriz de p-valores, cujo cálculo será descrito na seção seguinte. Vale enfatizar que o controle de qualidade das amostras é vital para a análise dos dados, pois permite minimizar enviesamentos e ter mais confiança em realizar alguma conclusão sobre o efeito da Covid-19 nos pacientes.
+O fluxo de pré-processamento foi feito seguindo o passo a passo descrito no artigo "A cross-package Biodonductor workflow for analysing methylation array data" [@Maksimovic2016], por meio das ferramentas oferecidas no pacote Bioconductor [@bioconductor], disponíveis para a linguagem R [@R]. Os agoritmos são aplicados na matriz de intensidades (betas), cujo cálculo será descrito na seção seguinte. Vale enfatizar que o controle de qualidade das amostras é vital para a análise dos dados, pois permite minimizar enviesamentos e ter mais confiança em realizar alguma conclusão sobre o efeito da Covid-19 nos pacientes.
 
 Devido a limitações computacionais para realizar as etapas de pré-processamento, esse trabalho usou recursos do Centro Nacional de Processamento de Alto Desempenho em São Paulo (CENAPAD-SP). Todos os códigos do projeto podem ser acessados no repositório dessa pesquisa presente no GitHub [@GuilhermeGit].
 
@@ -137,7 +135,7 @@ Devido a limitações computacionais para realizar as etapas de pré-processamen
 
 A matriz de p-valores é obtida comparando-se a distribuição das intensidades, para cada par de indivíduos e ilhas, com a distribuição do ruído de fundo (que por sua vez, foi calculado a partir das sondas de controle). Cada um dos ensaios (tipo I e tipo II) apresenta sua distribuição própria do ruído de fundo, bem como a intensidade de metilação dos indivíduos.
 
-Como exemplo, tomemos um indivíduo qualquer presente no banco. O primeiro passo é filtrar as sondas de controle, em cada um dos tipos de ensaios, e em seguida obter os parâmetros de três distribuições normais $\mathcal{N}(2\mu, 2\sigma^2)$ (Red, Green, Green+Red), onde $\mu$ é a mediana e $\sigma^2$ é o desvio absoluto mediano das intensidades para essas sondas. Após isso, devemos obter a intensidade de metilação total do indivíduo em cada ilha e calcular a probabilidade de cada uma dessas intensidades ser uma amostra da distribuição normal obtida no início [@Aryee2014].
+Como exemplo, tomemos um indivíduo qualquer presente no banco. O primeiro passo é filtrar as sondas de controle, em cada um dos tipos de ensaios, e em seguida obter os parâmetros de três distribuições normais $\mathcal{N}(2\mu, 2\sigma^2)$ (Red, Green, Green+Red), onde $\mu$ é a mediana e $\sigma^2$ é o desvio absoluto mediano das intensidades para essas sondas. Após isso, devemos obter a intensidade de metilação total do indivíduo em cada sítio e calcular a probabilidade de cada uma dessas intensidades ser uma amostra da distribuição normal obtida no início [@Aryee2014].
 
 ## Filtro das amostras
 
@@ -149,13 +147,13 @@ A normalização quantílica [@Touleimat2012] é uma técnica de pré-processame
 
 ## Filtro das sondas
 
-Nessa etapa, aplicou-se diversos filtros diferentes. O primeiro é mais simples, e cacula a média dos p-valores dos indivíduos, fixando-se ilha por ilha, e segue apenas com as CpG's que registrarem valores inferiores a $\alpha=0.01$. O segundo filtro tem como objetivo remover as sondas dos cromossomos X e Y, para evitar possíveis tendências de metilação dadas pelo sexo do paciente. 
+Nessa etapa, aplicou-se diversos filtros diferentes. O primeiro é mais simples, e cacula a média dos p-valores dos indivíduos, fixando-se ilha por ilha, e segue apenas com as CPG's que registrarem valores inferiores a $\alpha=0.01$. O segundo filtro tem como objetivo remover as sondas dos cromossomos X e Y, para evitar possíveis tendências de metilação dadas pelo sexo do paciente. 
 
-O terceiro filtro busca remover as sondas afetadas por SNPs (Single Nucleotide Polymorphism) em seus campos, para evitar possíveis enviesamentos, pois o nível de metilação captado pelo sinal pode ser decorrente de CpGs polimórficas que sobrepuseram regiões de SNPs. Por último, é importante remover as sondas que demonstraram ser reativo-cruzadas, ou em inglês, cross-reactive, pois as mesmas se ligam a múltiplos trechos do genoma [@Chen2013].
+O terceiro filtro busca remover as sondas afetadas por SNPs (Single Nucleotide Polymorphism) em seus campos, com o objetivo de evitar possíveis enviesamentos, pois o nível de metilação captado pelo sinal pode ser decorrente de CpGs polimórficas que sobrepuseram regiões de SNPs. Por último, é importante remover as sondas que demonstraram ser reativo-cruzadas, ou em inglês, cross-reactive, pois as mesmas se ligam a múltiplos trechos do genoma [@Chen2013].
 
 ## Resultado final
 
-Na Figura 4, é possível ver que o pré-processamento uniformizou as densidades dos betas de cada um dos indivíduos. Portanto, temos mais confiança para dizer que os efeitos de laboratório e da coleta de dados foram reduzidos e terão menos impacto em nossas análises. Portanto, as etapas de pré-processamento consistiram em remover amostras  de baixa qualidade, aplicar a normalização quantílica e remover sondas de CpGs referentes ao sexo do paciente e/ou com reatividade cruzada.
+Na Figura 4, é possível ver que o pré-processamento uniformizou as densidades dos betas de cada um dos indivíduos. Portanto, temos mais confiança para dizer que os efeitos de laboratório e da coleta de dados foram reduzidos e apresentam menos impacto em nossas análises. Em suma, as etapas de pré-processamento consistiram em remover amostras  de baixa qualidade, aplicar a normalização quantílica e remover sondas de CpGs referentes ao sexo do paciente e/ou com reatividade cruzada.
 
 
 ```{r preprocess, fig.cap="Densidade das taxas de metilação antes e depois do pré-proprocessamento.", out.width = '100%', out.height='100%'}
@@ -214,7 +212,7 @@ Os métodos de clustering hierárquico funcionam de tal forma que, dado um cojun
 
 ## Modelos de Misturas Gaussianas
 
-Misturas finitas de modelos [@Scrucca2016-sm] estão cada vez mais sendo utilizadas em diversos campos de pesquisa, como análise de agrumaneto, classificação e estimação de densidades. O método nos diz que, dado um número $G$ de variáveis aleatórias com distribuição $f_k(\textbf{x})_i$, tal que $i=1,2,3,..,G$ e $\mathbf{x}$$=${$x_1, x_2,...,x_n$} é uma amostra iid, podemos escrever a distribuição de cada uma das observações por uma função de densidade de probabilidade através de uma mistura finita de modelos de G componentes da seguinte forma
+Misturas finitas de modelos [@Scrucca2016-sm] estão cada vez mais sendo utilizadas em diversos ramos de pesquisa, como análise de agrumaneto, classificação e estimação de densidades. O método nos diz que, dado um número $G$ de variáveis aleatórias com distribuição $f_k(\textbf{x})_i$, tal que $i=1,2,3,..,G$ e $\mathbf{x}$$=${$x_1, x_2,...,x_n$} é uma amostra independente e identicamente distribuída, podemos escrever a distribuição de cada uma das observações por meio de uma função de densidade de probabilidade através de uma mistura finita de modelos de G componentes da seguinte forma
 
 $$
 f(\mathbf{x}_i;\mathbf{\Psi}) = \sum_{k=1}^{G}\pi_k f_{k}(\mathbf{x}_i;\mathbf{\theta}_k)
@@ -222,18 +220,18 @@ $$
 
 onde $\mathbf{\Psi}$ $=$ {$\pi_1,...,\pi_{G-1}, \mathbf{\theta}_1,...,\mathbf{\theta}_G$} são os parâmetros do modelo de misturas, $f_{k}(\mathbf{x}_i;\mathbf{\theta}_k)$ é a k-ésima componente de densidade para a observação $i$ com parâmetro $\mathbf{\theta}_k$, ($\pi_1,...,\pi_{G-1}$) são os pesos ou probabilidades ($\pi_k>0$, $\sum_{k=1}^{G}\pi_k=1$) e $G$ é o número de componentes da mistura.
 
-Assumindo que G é fixado, os parâmetros $\mathbf{\Psi}$ da mistura de modelos são, geralmente, desconhecidos e precisam ser estimados. A função do log da verossimilhança é dada por 
+Assumindo que G é pré-fixado, os parâmetros $\mathbf{\Psi}$ da mistura de modelos são, geralmente, desconhecidos e precisam ser estimados. A função do log da verossimilhança é dada por 
 
 $$
 \mathcal{L}(\mathbf{\Psi}; \mathbf{x}_1,...,\mathbf{x}_n)=\sum_{i=1}^{n}log(f(\mathbf{x}_i;\mathbf{\Psi}))=\sum_{i=1}^{n}log(\sum_{k=1}^{G}\pi_k f_{k}(\mathbf{x}_i;\mathbf{\theta}_k)).
 $$
-A maximização direta da verossimilhança é muito complicada devido ao logaritmo da soma. Para contornar esse problema, utiliza-se o algoritmo \textit{Expextation - Maximization}, ou simplesmente EM.
+A maximização direta da verossimilhança é muito complicada devido ao logaritmo da soma. Para contornar esse problema, utiliza-se a técnica \textit{Expextation - Maximization}, ou simplesmente EM [@borman2004expectation].
 
 No presente trabalho, utilizou-se um modelo popuar denominado Gaussian Mixture Model (GMM), que assume uma distribuição gaussiana multivariada para cada componente, isto é, $f_k(\mathbf{x};\mathbf{\theta}_k) \sim \mathcal{N}(\mathbf{\mu}_k, \mathbf{\Sigma}_k)$. Os agrupamentos formados são elipsoidais, centrados no vetor de médias $\mathbf{\mu}_k$, com propriedades geométricas definidas pela matriz de covariâncias $\mathbf{\Sigma}_k$. O pacote mclust, utilizado na pesquisa, inicia o algoritmo aplicando-se um clustering hierárquico, para obter $\Psi_o$, e então atualiza sequencialmente as densidades buscando-se maximizar a função $\mathcal{L}(\mathbf{\Psi}; \mathbf{x}_1,...,\mathbf{x}_n)$.
 
 ## Redução de Dimensões
 
-As técnicas de redução de dimensão estão sendo aplicadas em um variedade de campos e em tamanhos cada vez maiores de conjuntos de dados. UMAP (Uniform Manifold Approximation and Projection)  [@mcinnes2020umap] é uma técnica de aprendizado múltiplo para redução de dimensões. UMAP foi construído a partir de um framework baseado na geometria de Riemannian e na topologia algébrica, e fornece um algoritmo escalável e aplicável em dados do mundo real. Além disso, essa técnica é uma alternativa ao t-SNE, fornecendo mais qualidade de visualização, mantendo mais da estrutura global e sendo mais eficiente no tempo de execução.
+As técnicas de redução de dimensão estão sendo aplicadas em um variedade de campos e em tamanhos cada vez maiores de conjuntos de dados. UMAP (Uniform Manifold Approximation and Projection)  [@mcinnes2020umap] é uma técnica de aprendizado múltiplo para redução de dimensões. UMAP foi construído a partir de um framework baseado na geometria de Riemannian e topologia algébrica, e fornece um algoritmo escalável e aplicável em dados do mundo real. Além disso, essa técnica é uma alternativa ao t-SNE, fornecendo mais qualidade de visualização, preservando mais da estrutura global dos dados e sendo mais eficiente no tempo de execução.
 
 \newpage
 
