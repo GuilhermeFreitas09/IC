@@ -2,4 +2,4 @@
 
 Iniciação científica PIBIC/Unicamp.
 
-A pesquisa ainda está em desenvolvimento.
+Versão para o Cenapad.
